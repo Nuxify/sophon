@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sophon/configs/themes.dart';
+import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
@@ -73,7 +74,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   void initiateListeners() {
     connector.on('connect', (session) {
-      setState(() => _session = _session);
+      // setState(() => _session = _session);
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              HomeScreen(session: session, connector: connector)));
     });
     connector.on('session_update', (payload) {
       setState(() => _session = payload);
@@ -81,11 +85,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     connector.on('disconnect', (payload) {
       setState(() => _session = null);
     });
-  }
-
-  void closeConnection() {
-    connector.killSession();
-    connector.close();
   }
 
   @override
@@ -117,27 +116,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 'assets/images/logo.png',
                 width: width * 0.7,
               ),
-              if (_session != null)
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Account'),
-                      Text('${_session.accounts[0]}'),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Text('Chain: '),
-                          Text(getNetworkName(_session.chainId))
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      const Text('URI: '),
-                      Text(_uri),
-                    ],
-                  ),
-                ),
               Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: width * 0.08,
@@ -173,18 +151,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           width: 16,
                         ),
                         label: const Text('Connect to MetaMask'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(kViolet),
-                          elevation: MaterialStateProperty.all(0),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: ElevatedButton.icon(
-                        onPressed: closeConnection,
-                        icon: const Icon(Icons.close),
-                        label: const Text('Close Connection'),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(kViolet),
                           elevation: MaterialStateProperty.all(0),
