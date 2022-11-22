@@ -27,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final String contractAddress = '0x093eb7ccAfa165D8D35c6666984de510Be58cBd2';
+  final String abiDirectory = 'assets/abi/greeter.abi.json';
 
   late SessionStatus sessionStatus;
   late String sender;
@@ -101,9 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
     sender = widget.connector.session.accounts[0];
     provider = EthereumWalletConnectProvider(widget.connector);
     wcCreds = WalletConnectEthereumCredentials(provider: provider);
-
-    contractABI = await DefaultAssetBundle.of(context)
-        .loadString("assets/greeter.abi.json");
+    contractABI = await DefaultAssetBundle.of(context).loadString(abiDirectory);
     contract = DeployedContract(
       ContractAbi.fromJson(json.encode(contractABI), 'Greeter'),
       EthereumAddress.fromHex(contractAddress),
