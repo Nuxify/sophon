@@ -1,20 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:sophon/configs/themes.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
+import 'package:web3dart/web3dart.dart';
+
+import 'package:sophon/configs/helpers/ethereum_credentials.dart';
+import 'package:sophon/configs/themes.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required this.session, required this.connector})
-      : super(key: key);
+  const HomeScreen({
+    Key? key,
+    required this.session,
+    required this.connector,
+    required this.uri,
+  }) : super(key: key);
 
   final dynamic session;
   final WalletConnect connector;
+  final String uri;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final String contractAddress = '0x093eb7ccAfa165D8D35c6666984de510Be58cBd2';
+
   late SessionStatus sessionStatus;
+  late String sender;
+  late EthereumWalletConnectProvider provider;
+  late WalletConnectEthereumCredentials wcCreds;
+  late String contractABI;
+  late DeployedContract contract;
+  late ContractFunction setGreetingFunction;
+
+  Web3Client web3Client = Web3Client(
+    'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161', // Goerli RPC URL
+    http.Client(),
+  );
+
   String getNetworkName(chainId) {
     switch (chainId) {
       case 1:
@@ -34,17 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String truncateString(String text, int front, int end) {
-    int size = front + end;
-    if (text.length > size) {
-      String finalString =
-          "${text.substring(0, front)}...${text.substring(text.length - end)}";
-      return finalString;
-    }
-
-    return text;
-  }
-
+  /// Terminates metamask connection
   void closeConnection() {
     setState(() {
       widget.connector.killSession();
@@ -55,10 +71,50 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  /// Parses the specifics of the Smart Contract (contract and function), launches MetaMask, then sends the write transaction.
+  Future<void> writeTransaction() async {
+    launchUrlString(widget.uri, mode: LaunchMode.externalApplication);
+
+    try {
+      String hash = await web3Client.sendTransaction(
+        wcCreds,
+        Transaction.callContract(
+          contract: contract,
+          function: setGreetingFunction,
+          from: EthereumAddress.fromHex(sender),
+          parameters: ['flutter update #2.'],
+          maxGas: 210000,
+          gasPrice: EtherAmount.inWei(BigInt.one),
+        ),
+        chainId: 5,
+      );
+
+      print('Hash: $hash');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  /// Initializes the provider, sessionStatus, sender, credentials, etc.
+  Future<void> initializeProvider() async {
+    sessionStatus = widget.session;
+    sender = widget.connector.session.accounts[0];
+    provider = EthereumWalletConnectProvider(widget.connector);
+    wcCreds = WalletConnectEthereumCredentials(provider: provider);
+
+    contractABI = await DefaultAssetBundle.of(context)
+        .loadString("assets/greeter.abi.json");
+    contract = DeployedContract(
+      ContractAbi.fromJson(json.encode(contractABI), 'Greeter'),
+      EthereumAddress.fromHex(contractAddress),
+    );
+    setGreetingFunction = contract.function('setGreeting');
+  }
+
   @override
   void initState() {
     super.initState();
-    sessionStatus = widget.session;
+    initializeProvider();
   }
 
   @override
@@ -132,12 +188,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       Text(
-                        getNetworkName(widget.session.chainId),
+                        '${getNetworkName(widget.session.chainId)} [ ${widget.session.chainId} ]',
                         style: theme.textTheme.headline6?.copyWith(
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                     ],
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: writeTransaction,
+                    icon: const Icon(Icons.e_mobiledata),
+                    label: const Text('Write'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blue),
+                      elevation: MaterialStateProperty.all(0),
+                    ),
                   ),
                 ],
               ),
@@ -146,19 +211,20 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: Padding(
-                    padding: EdgeInsets.only(bottom: height * 0.05),
-                    child: widget.connector.connected
-                        ? ElevatedButton.icon(
-                            onPressed: closeConnection,
-                            icon: const Icon(Icons.close),
-                            label: const Text('Close Connection'),
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.blue),
-                              elevation: MaterialStateProperty.all(0),
-                            ),
-                          )
-                        : const CircularProgressIndicator(color: kLightViolet)),
+                  padding: EdgeInsets.only(bottom: height * 0.05),
+                  child: widget.connector.connected
+                      ? ElevatedButton.icon(
+                          onPressed: closeConnection,
+                          icon: const Icon(Icons.close),
+                          label: const Text('Close Connection'),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue),
+                            elevation: MaterialStateProperty.all(0),
+                          ),
+                        )
+                      : const CircularProgressIndicator(color: kLightViolet),
+                ),
               ),
             ),
           ],

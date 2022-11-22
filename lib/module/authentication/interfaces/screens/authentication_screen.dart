@@ -12,8 +12,9 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  // ignore: unused_field
   dynamic _session;
-  String _uri = '';
+  String walletConnectURI = '';
 
   WalletConnect connector = WalletConnect(
     bridge: 'https://bridge.walletconnect.org',
@@ -32,7 +33,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       try {
         SessionStatus session =
             await connector.createSession(onDisplayUri: (uri) async {
-          _uri = uri;
+          walletConnectURI = uri;
           await launchUrlString(uri, mode: LaunchMode.externalApplication);
         });
         setState(() => _session = session);
@@ -74,10 +75,15 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   void initiateListeners() {
     connector.on('connect', (session) {
-      // setState(() => _session = _session);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              HomeScreen(session: session, connector: connector)));
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(
+            session: session,
+            connector: connector,
+            uri: walletConnectURI,
+          ),
+        ),
+      );
     });
     connector.on('session_update', (payload) {
       setState(() => _session = payload);
