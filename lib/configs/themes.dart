@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-const Color kViolet = Color(0xFF532b88);
-const Color kDarkViolet = Color(0xFF2F184B);
-const Color kLightViolet = Color(0xFFC8B1E4);
 const Color kPink = Color(0xFFfe6796);
 
 ThemeData buildDefaultTheme(BuildContext context) {
@@ -13,7 +10,6 @@ ThemeData buildDefaultTheme(BuildContext context) {
     primaryColor: kPink,
     colorScheme: base.colorScheme.copyWith(
       primary: kPink,
-      // error: kRed,
     ),
   );
 }
@@ -35,11 +31,6 @@ TextTheme _buildDefaultTextTheme(TextTheme base) {
     overline: base.overline?.copyWith(fontFamily: 'Raleway'),
   );
 }
-
-const List<Color> violetGradient = <Color>[
-  Color(0xFF532B88),
-  Color(0xFFF4EFFA),
-];
 
 const List<Color> flirtGradient = <Color>[
   Color(0xFFfe8cb3),

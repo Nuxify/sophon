@@ -52,42 +52,38 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         body: DecoratedBox(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: violetGradient,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: flirtGradient,
             ),
           ),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: width * 0.7,
+                Padding(
+                  padding: EdgeInsets.only(bottom: height * 0.4),
+                  child: Text(
+                    'Sophon',
+                    style: theme.textTheme.headline3,
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.08,
+                    horizontal: width * 0.2,
                     vertical: height * 0.05,
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white24,
-                    border: Border.all(color: kLightViolet),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Connect your Ethereum Wallet to',
+                        'Connect your Ethereum Wallet',
                         textAlign: TextAlign.center,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Text(
-                        'Sophon',
-                        style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w300,
                         ),
                       ),
@@ -100,10 +96,18 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                             'assets/images/metamask-logo.png',
                             width: 16,
                           ),
-                          label: const Text('Connect to MetaMask'),
+                          label: Text('Login with Metamask',
+                              style: theme.textTheme.subtitle1),
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(kViolet),
                             elevation: MaterialStateProperty.all(0),
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.white.withAlpha(60),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
                           ),
                         ),
                       ),

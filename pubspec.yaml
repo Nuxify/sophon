@@ -69,7 +69,6 @@ flutter:
   assets:
       - assets/images/metamask-logo.png
       - assets/images/walletconnect-logo.png
-      - assets/images/logo.png
       - assets/abi/greeter.abi.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
