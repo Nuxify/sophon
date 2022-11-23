@@ -1,16 +1,28 @@
-# sophon
+# Sophon
 
-A new Flutter project.
+Nuxify's very own template for building decentralized apps (dApps) with Flutter and Dart.
 
-## Getting Started
+Interacts with a Greeter Smart Contract found here: https://goerli.etherscan.io/address/0x093eb7ccAfa165D8D35c6666984de510Be58cBd2
 
-This project is a starting point for a Flutter application.
+Template architecture 
+## Build steps
 
-A few resources to get you started if this is your first Flutter project:
+All these steps are assuming you're using VS Code as your editor.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Make sure that the [Flutter SDK](https://flutter.dev/docs/get-started/install) is installed on your machine. 
+- The installation of the SDK requires plenty of other software such as **Android Studio** and **Xcode** (if you're developing in Mac). Ensure that you have these too.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. You can run the project in multiple ways:
+- Android Emulator (Open Android Studio -> Configure -> AVD Manager)
+- iOS Simulator (Run ```open -a Simulator``` in the Terminal)
+- Physical device (Connect phone to your development machine)
+
+3. Run the command ``make`` on the Terminal. This will automatically run a sequence of commands such as ```make install``` that are necessary for running the project.
+
+4. Voila! The project should now be running on your designated simulator/device.
+
+To use Flutter debug tools, go to Run -> Start Debugging in VS Code.
+
+See Makefile for other commands.
+
+Made with ❤️ at [Nuxify](https://nuxify.tech)
