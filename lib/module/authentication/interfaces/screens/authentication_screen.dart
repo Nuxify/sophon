@@ -38,7 +38,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         });
         setState(() => _session = session);
       } catch (e) {
-        print('Error: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
