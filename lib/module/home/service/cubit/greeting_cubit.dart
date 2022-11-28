@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:sophon/internal/ethereum_credentials.dart';
+import 'package:sophon/utils/web3_utils.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -34,25 +35,6 @@ class GreetingCubit extends Cubit<GreetingState> {
     dotenv.get('ETHEREUM_RPC'), // Goerli RPC URL
     http.Client(),
   );
-
-  String getNetworkName(chainId) {
-    switch (chainId) {
-      case 1:
-        return 'Ethereum Mainnet';
-      case 3:
-        return 'Ropsten Testnet';
-      case 4:
-        return 'Rinkeby Testnet';
-      case 5:
-        return 'Goerli Testnet';
-      case 42:
-        return 'Kovan Testnet';
-      case 137:
-        return 'Polygon Mainnet';
-      default:
-        return 'Unknown Chain';
-    }
-  }
 
   /// Initializes the provider, sessionStatus, sender, credentials, etc.
   Future<void> initializeProvider({
