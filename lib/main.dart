@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
@@ -8,7 +9,10 @@ import 'package:sophon/module/authentication/interfaces/screens/authentication_s
 import 'package:sophon/module/authentication/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
 
-void main() {
+Future<void> main() async {
+  /// Load env file
+  await dotenv.load();
+
   runApp(const MyApp());
 }
 

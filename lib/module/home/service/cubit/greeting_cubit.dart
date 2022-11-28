@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
@@ -14,7 +15,7 @@ part 'greeting_state.dart';
 class GreetingCubit extends Cubit<GreetingState> {
   GreetingCubit() : super(const GreetingState());
 
-  final String contractAddress = '0x093eb7ccAfa165D8D35c6666984de510Be58cBd2';
+  final String contractAddress = dotenv.get('GREETER_CONTRACT_ADDRESS');
   final String abiDirectory = 'lib/contracts/staging/greeter.abi.json';
 
   late SessionStatus sessionStatus;
@@ -30,7 +31,7 @@ class GreetingCubit extends Cubit<GreetingState> {
   String latestGreeting = '';
 
   Web3Client web3Client = Web3Client(
-    'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161', // Goerli RPC URL
+    dotenv.get('ETHEREUM_RPC'), // Goerli RPC URL
     http.Client(),
   );
 
