@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/configs/themes.dart';
+import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
+import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
 import 'package:sophon/module/authentication/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/authentication/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
@@ -22,6 +24,11 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<AuthCubit>(
           create: (BuildContext context) => AuthCubit(),
+        ),
+        BlocProvider<SecureStorageCubit>(
+          create: (BuildContext context) => SecureStorageCubit(
+            storage: SecureStorageRepository(),
+          ),
         ),
       ],
       child: MaterialApp(
