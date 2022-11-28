@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => GreetingCubit(),
         ),
         BlocProvider<AuthCubit>(
-          create: (BuildContext context) => AuthCubit(),
+          create: (BuildContext context) => AuthCubit(
+            storage: SecureStorageRepository(),
+          ),
         ),
         BlocProvider<SecureStorageCubit>(
           create: (BuildContext context) => SecureStorageCubit(
