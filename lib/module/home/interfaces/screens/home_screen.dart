@@ -51,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<GreetingCubit>().initializeProvider(
           session: widget.session,
           connector: widget.connector,
-          context: context,
         );
   }
 
