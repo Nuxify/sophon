@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:sophon/internal/ethereum_credentials.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
-import 'package:sophon/configs/helpers/ethereum_credentials.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'greeting_state.dart';
