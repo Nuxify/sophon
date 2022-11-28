@@ -5,8 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
-import 'package:sophon/module/authentication/interfaces/screens/authentication_screen.dart';
-import 'package:sophon/module/authentication/service/cubit/auth_cubit.dart';
+import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
+import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
 
 Future<void> main() async {

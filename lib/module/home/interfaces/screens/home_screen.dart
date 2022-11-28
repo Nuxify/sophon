@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sophon/module/authentication/interfaces/screens/authentication_screen.dart';
+import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
