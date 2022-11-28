@@ -60,7 +60,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is EstablishConnectionSuccess) {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => HomeScreen(
                 session: state.session,
