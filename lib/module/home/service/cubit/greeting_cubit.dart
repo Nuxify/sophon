@@ -15,7 +15,7 @@ class GreetingCubit extends Cubit<GreetingState> {
   GreetingCubit() : super(const GreetingState());
 
   final String contractAddress = '0x093eb7ccAfa165D8D35c6666984de510Be58cBd2';
-  final String abiDirectory = 'assets/abi/greeter.abi.json';
+  final String abiDirectory = 'lib/contracts/staging/greeter.abi.json';
 
   late SessionStatus sessionStatus;
   late String sender;
