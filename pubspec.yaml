@@ -41,6 +41,7 @@ dependencies:
   web3dart: ^2.3.5
 
 dev_dependencies:
+  bloc_test: ^9.1.0
   build_runner: null
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -50,6 +51,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  mocktail: ^0.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
