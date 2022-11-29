@@ -31,10 +31,10 @@ class GreetingCubit extends Cubit<GreetingState> {
   );
 
   /// Initializes the provider, sessionStatus, sender, credentials, etc.
-  Future<void> initializeProvider({
+  void initializeProvider({
     required SessionStatus session,
     required WalletConnect connector,
-  }) async {
+  }) {
     walletConnector = connector;
     sessionStatus = session;
     sender = connector.session.accounts[0];

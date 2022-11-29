@@ -48,10 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<GreetingCubit>().initializeProvider(
-          session: widget.session,
-          connector: widget.connector,
-        );
+
+    /// Execute after frame is rendered to get the emit state of InitializeProviderSuccess
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<GreetingCubit>().initializeProvider(
+            session: widget.session,
+            connector: widget.connector,
+          ),
+    );
   }
 
   @override
@@ -61,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final double height = MediaQuery.of(context).size.height;
 
     return BlocListener<GreetingCubit, GreetingState>(
-      listener: (context, state) {
+      listener: (BuildContext context, GreetingState state) {
         if (state is SessionTerminated) {
           Future.delayed(const Duration(seconds: 2), () {
             Navigator.of(context).pushReplacement(
