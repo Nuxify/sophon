@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
@@ -47,11 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<GreetingCubit>().initializeProvider(
-          session: widget.session,
-          connector: widget.connector,
-          context: context,
-        );
+
+    /// Execute after frame is rendered to get the emit state of InitializeProviderSuccess
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<GreetingCubit>().initializeProvider(
+            session: widget.session,
+            connector: widget.connector,
+          ),
+    );
   }
 
   @override
@@ -61,10 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final double height = MediaQuery.of(context).size.height;
 
     return BlocListener<GreetingCubit, GreetingState>(
-      listener: (context, state) {
+      listener: (BuildContext context, GreetingState state) {
         if (state is SessionTerminated) {
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pop(context);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const AuthenticationScreen(),
+              ),
+            );
           });
         } else if (state is UpdateGreetingFailed) {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -1,14 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
+import 'package:sophon/utils/wallet_status_storage.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(const AuthState());
-
+  AuthCubit({required this.storage}) : super(const AuthState());
+  final ISecureStorageRepository storage;
   // ignore: unused_field
   dynamic _session;
   String walletConnectURI = '';
+  String _provider = '';
 
   WalletConnect connector = WalletConnect(
     bridge: 'https://bridge.walletconnect.org',
@@ -23,14 +26,22 @@ class AuthCubit extends Cubit<AuthState> {
   );
 
   void initiateListeners() {
-    connector.on('connect', (session) {
+    connector.on('connect', (session) async {
+      /// Save connected to reuse after closing the app.
+      await storage.write(key: 'provider', value: _provider);
+      await storage.write(key: 'status', value: connected);
+
       emit(EstablishConnectionSuccess(
           session: session, connector: connector, uri: walletConnectURI));
     });
     connector.on('session_update', (session) {
       _session = session;
     });
-    connector.on('disconnect', (_) {
+    connector.on('disconnect', (_) async {
+      /// Clear provider and set the status to disconnect.
+      await storage.write(key: 'provider', value: '');
+      await storage.write(key: 'status', value: disconnected);
+
       emit(SessionDisconnected());
     });
   }
@@ -47,28 +58,10 @@ class AuthCubit extends Cubit<AuthState> {
           emit(LoginWithMetamaskSuccess(url: uri));
         });
         _session = session;
+        _provider = metamask;
       } catch (e) {
         emit(LoginWithMetamaskFailed(errorCode: '', message: e.toString()));
       }
-    }
-  }
-
-  String getNetworkName(chainId) {
-    switch (chainId) {
-      case 1:
-        return 'Ethereum Mainnet';
-      case 3:
-        return 'Ropsten Testnet';
-      case 4:
-        return 'Rinkeby Testnet';
-      case 5:
-        return 'Goerli Testnet';
-      case 42:
-        return 'Kovan Testnet';
-      case 137:
-        return 'Polygon Mainnet';
-      default:
-        return 'Unknown Chain';
     }
   }
 }
