@@ -47,6 +47,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loginWithMetamask() async {
+    if (!connector.bridgeConnected) {
+      connector.reconnect();
+    }
     if (!connector.connected) {
       try {
         SessionStatus session =
