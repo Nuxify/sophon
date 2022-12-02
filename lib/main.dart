@@ -5,9 +5,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
+import 'package:sophon/internal/wc_session_storage.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/contracts.dart';
 import 'package:web3dart/credentials.dart';
 
@@ -15,11 +17,36 @@ Future<void> main() async {
   /// Load env file
   await dotenv.load();
 
-  runApp(const MyApp());
+  final WalletConnectSecureStorage sessionStorage =
+      WalletConnectSecureStorage();
+  WalletConnectSession? session = await sessionStorage.getSession();
+
+  final WalletConnect walletConnect = WalletConnect(
+    session: session,
+    sessionStorage: sessionStorage,
+    bridge: 'https://bridge.walletconnect.org',
+    clientMeta: const PeerMeta(
+      name: 'Nuxify Greeter Client',
+      description: 'An app for converting pictures to NFT',
+      url: 'https://github.com/Nuxify/Sophon',
+      icons: [
+        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
+      ],
+    ),
+  );
+  runApp(
+    MyApp(
+      walletConnect: walletConnect,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({
+    required this.walletConnect,
+    super.key,
+  });
+  final WalletConnect walletConnect;
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -63,6 +90,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<AuthCubit>(
           create: (BuildContext context) => AuthCubit(
             storage: SecureStorageRepository(),
+            connector: widget.walletConnect,
           ),
         ),
         BlocProvider<SecureStorageCubit>(

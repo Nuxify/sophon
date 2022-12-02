@@ -6,26 +6,28 @@ import 'package:walletconnect_dart/walletconnect_dart.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({required this.storage}) : super(const AuthState());
+  AuthCubit({required this.storage, required this.connector})
+      : super(const AuthState());
   final ISecureStorageRepository storage;
+  final WalletConnect connector;
   // ignore: unused_field
   dynamic _session;
   String walletConnectURI = '';
   String _provider = '';
 
-  WalletConnect connector = WalletConnect(
-    bridge: 'https://bridge.walletconnect.org',
-    clientMeta: const PeerMeta(
-      name: 'Nuxify Greeter Client',
-      description: 'An app for converting pictures to NFT',
-      url: 'https://github.com/Nuxify/Sophon',
-      icons: [
-        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
-      ],
-    ),
-  );
-
   void initiateListeners() {
+    if (connector.connected) {
+      emit(
+        EstablishConnectionSuccess(
+          session: SessionStatus(
+              accounts: connector.session.accounts,
+              chainId: connector.session.chainId),
+          connector: connector,
+          uri: connector.session.toUri(),
+        ),
+      );
+      return;
+    }
     connector.on('connect', (session) async {
       /// Save connected to reuse after closing the app.
       await storage.write(key: 'provider', value: _provider);
