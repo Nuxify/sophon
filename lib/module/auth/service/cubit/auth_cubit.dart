@@ -16,11 +16,11 @@ class AuthCubit extends Cubit<AuthState> {
   WalletConnect connector = WalletConnect(
     bridge: 'https://bridge.walletconnect.org',
     clientMeta: const PeerMeta(
-      name: 'My App',
+      name: 'Nuxify Greeter Client',
       description: 'An app for converting pictures to NFT',
-      url: 'https://opensea.io/',
+      url: 'https://github.com/Nuxify/Sophon',
       icons: [
-        'https://ca.slack-edge.com/T01446UKF89-U015K3WTFGC-5de06fff3b26-512'
+        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
       ],
     ),
   );
