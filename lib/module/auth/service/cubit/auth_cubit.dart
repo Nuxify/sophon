@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
-import 'package:sophon/utils/wallet_status_storage.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 part 'auth_state.dart';
@@ -13,7 +12,6 @@ class AuthCubit extends Cubit<AuthState> {
   // ignore: unused_field
   dynamic _session;
   String walletConnectURI = '';
-  String _provider = '';
 
   void initiateListeners() {
     if (connector.connected) {
@@ -29,10 +27,6 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
     connector.on('connect', (session) async {
-      /// Save connected to reuse after closing the app.
-      await storage.write(key: 'provider', value: _provider);
-      await storage.write(key: 'status', value: connected);
-
       emit(EstablishConnectionSuccess(
           session: session, connector: connector, uri: walletConnectURI));
     });
@@ -40,10 +34,6 @@ class AuthCubit extends Cubit<AuthState> {
       _session = session;
     });
     connector.on('disconnect', (_) async {
-      /// Clear provider and set the status to disconnect.
-      await storage.write(key: 'provider', value: '');
-      await storage.write(key: 'status', value: disconnected);
-
       emit(SessionDisconnected());
     });
   }
@@ -60,7 +50,6 @@ class AuthCubit extends Cubit<AuthState> {
           emit(LoginWithMetamaskSuccess(url: uri));
         });
         _session = session;
-        _provider = metamask;
       } catch (e) {
         emit(LoginWithMetamaskFailed(errorCode: '', message: e.toString()));
       }
