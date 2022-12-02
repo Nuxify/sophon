@@ -17,7 +17,8 @@ class AuthCubit extends Cubit<AuthState> {
     bridge: 'https://bridge.walletconnect.org',
     clientMeta: const PeerMeta(
       name: 'Nuxify Greeter Client',
-      description: 'An app for converting pictures to NFT',
+      description:
+          'A mobile client for interacting with the Greeter Smart Contract developed by Nuxify.',
       url: 'https://github.com/Nuxify/Sophon',
       icons: [
         'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
