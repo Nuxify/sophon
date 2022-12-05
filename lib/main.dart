@@ -10,8 +10,8 @@ import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
-import 'package:web3dart/contracts.dart';
-import 'package:web3dart/credentials.dart';
+import 'package:http/http.dart' as http;
+import 'package:web3dart/web3dart.dart';
 
 Future<void> main() async {
   /// Load env file
@@ -53,6 +53,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final DeployedContract _contract;
+  late final Web3Client _web3client;
 
   Future<DeployedContract> get _deployedContract async {
     const String abiDirectory = 'lib/contracts/staging/greeter.abi.json';
@@ -70,6 +71,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> loadContract() async {
     _contract = await _deployedContract;
+    _web3client = Web3Client(
+      dotenv.get('ETHEREUM_RPC'), // Goerli RPC URL
+      http.Client(),
+    );
   }
 
   @override
@@ -85,6 +90,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<GreetingCubit>(
           create: (BuildContext context) => GreetingCubit(
             contract: _contract,
+            web3Client: _web3client,
           ),
         ),
         BlocProvider<AuthCubit>(

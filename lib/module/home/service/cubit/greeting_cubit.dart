@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 import 'package:sophon/internal/ethereum_credentials.dart';
 import 'package:sophon/utils/web3_utils.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
@@ -11,8 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'greeting_state.dart';
 
 class GreetingCubit extends Cubit<GreetingState> {
-  GreetingCubit({required this.contract}) : super(const GreetingState());
+  GreetingCubit({required this.contract, required this.web3Client})
+      : super(const GreetingState());
   final DeployedContract contract;
+  final Web3Client web3Client;
 
   late SessionStatus sessionStatus;
   late String sender;
@@ -24,11 +24,6 @@ class GreetingCubit extends Cubit<GreetingState> {
   late WalletConnect walletConnector;
 
   String latestGreeting = '';
-
-  Web3Client web3Client = Web3Client(
-    dotenv.get('ETHEREUM_RPC'), // Goerli RPC URL
-    http.Client(),
-  );
 
   /// Initializes the provider, sessionStatus, sender, credentials, etc.
   void initializeProvider({
