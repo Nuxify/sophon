@@ -2,86 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
+import 'package:web3dart/web3dart.dart';
+
 import 'package:sophon/configs/themes.dart';
+import 'package:sophon/configs/web3_config.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
-import 'package:sophon/internal/wc_session_storage.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
-import 'package:http/http.dart' as http;
-import 'package:web3dart/web3dart.dart';
 
 Future<void> main() async {
   /// Load env file
   await dotenv.load();
 
-  final WalletConnectSecureStorage sessionStorage =
-      WalletConnectSecureStorage();
-  WalletConnectSession? session = await sessionStorage.getSession();
-
-  final WalletConnect walletConnect = WalletConnect(
-    session: session,
-    sessionStorage: sessionStorage,
-    bridge: 'https://bridge.walletconnect.org',
-    clientMeta: const PeerMeta(
-      name: 'Nuxify Greeter Client',
-      description: 'An app for converting pictures to NFT',
-      url: 'https://github.com/Nuxify/Sophon',
-      icons: [
-        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
-      ],
-    ),
-  );
   runApp(
     MyApp(
-      walletConnect: walletConnect,
+      walletConnect: await walletConnect,
+      contract: await deployedContract,
+      web3client: web3Client,
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({
     required this.walletConnect,
-    super.key,
-  });
+    required this.contract,
+    required this.web3client,
+    Key? key,
+  }) : super(key: key);
   final WalletConnect walletConnect;
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late final DeployedContract _contract;
-  late final Web3Client _web3client;
-
-  Future<DeployedContract> get _deployedContract async {
-    const String abiDirectory = 'lib/contracts/staging/greeter.abi.json';
-
-    final String contractAddress = dotenv.get('GREETER_CONTRACT_ADDRESS');
-
-    String contractABI = await rootBundle.loadString(abiDirectory);
-
-    final DeployedContract contract = DeployedContract(
-      ContractAbi.fromJson(contractABI, 'Greeter'),
-      EthereumAddress.fromHex(contractAddress),
-    );
-    return contract;
-  }
-
-  Future<void> loadContract() async {
-    _contract = await _deployedContract;
-    _web3client = Web3Client(
-      dotenv.get('ETHEREUM_RPC'), // Goerli RPC URL
-      http.Client(),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadContract();
-  }
+  final DeployedContract contract;
+  final Web3Client web3client;
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +43,14 @@ class _MyAppState extends State<MyApp> {
       providers: <BlocProvider<dynamic>>[
         BlocProvider<GreetingCubit>(
           create: (BuildContext context) => GreetingCubit(
-            contract: _contract,
-            web3Client: _web3client,
+            contract: contract,
+            web3Client: web3client,
           ),
         ),
         BlocProvider<AuthCubit>(
           create: (BuildContext context) => AuthCubit(
             storage: SecureStorageRepository(),
-            connector: widget.walletConnect,
+            connector: walletConnect,
           ),
         ),
         BlocProvider<SecureStorageCubit>(
