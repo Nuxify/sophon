@@ -49,9 +49,7 @@ void main() {
           ),
         );
 
-        when(() => mockSecureStorageRepository.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'))).thenAnswer((_) async {});
+        when(() => mockWalletConnect.connected).thenReturn(false);
 
         final AuthCubit cubit = AuthCubit(
           storage: mockSecureStorageRepository,
@@ -70,10 +68,7 @@ void main() {
         when(() => mockWalletConnect.rejectSession()).thenAnswer((_) async =>
             mockWalletConnect.eventBus
                 .fire(Event<String>('disconnect', 'Session Rejected')));
-
-        when(() => mockSecureStorageRepository.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'))).thenAnswer((_) async {});
+        when(() => mockWalletConnect.connected).thenReturn(false);
 
         final AuthCubit cubit = AuthCubit(
           storage: mockSecureStorageRepository,
@@ -91,6 +86,7 @@ void main() {
     group('loginWithMetamask.', () {
       test('On Successful login it should emit LoginWithMetamaskSuccess.', () {
         when(() => mockWalletConnect.connected).thenReturn(false);
+        when(() => mockWalletConnect.bridgeConnected).thenReturn(false);
 
         when(() =>
             mockWalletConnect.createSession(
@@ -110,6 +106,7 @@ void main() {
       });
       test('On Failed login it should emit LoginWithMetamaskFailed.', () {
         when(() => mockWalletConnect.connected).thenReturn(false);
+        when(() => mockWalletConnect.bridgeConnected).thenReturn(false);
 
         when(() => mockWalletConnect.createSession(
                 chainId: any(named: 'chainId'),
