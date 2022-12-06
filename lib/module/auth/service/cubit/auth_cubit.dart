@@ -1,37 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
-import 'package:sophon/utils/wallet_status_storage.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({required this.storage}) : super(const AuthState());
+  AuthCubit({required this.storage, required this.connector})
+      : super(const AuthState());
   final ISecureStorageRepository storage;
+  final WalletConnect connector;
   // ignore: unused_field
   dynamic _session;
   String walletConnectURI = '';
-  String _provider = '';
-
-  WalletConnect connector = WalletConnect(
-    bridge: 'https://bridge.walletconnect.org',
-    clientMeta: const PeerMeta(
-      name: 'Nuxify Greeter Client',
-      description:
-          'A mobile client for interacting with the Greeter Smart Contract developed by Nuxify.',
-      url: 'https://github.com/Nuxify/Sophon',
-      icons: [
-        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
-      ],
-    ),
-  );
 
   void initiateListeners() {
+    if (connector.connected) {
+      emit(
+        EstablishConnectionSuccess(
+          session: SessionStatus(
+              accounts: connector.session.accounts,
+              chainId: connector.session.chainId),
+          connector: connector,
+          uri: connector.session.toUri(),
+        ),
+      );
+      return;
+    }
     connector.on('connect', (session) async {
-      /// Save connected to reuse after closing the app.
-      await storage.write(key: 'provider', value: _provider);
-      await storage.write(key: 'status', value: connected);
-
       emit(EstablishConnectionSuccess(
           session: session, connector: connector, uri: walletConnectURI));
     });
@@ -39,10 +34,6 @@ class AuthCubit extends Cubit<AuthState> {
       _session = session;
     });
     connector.on('disconnect', (_) async {
-      /// Clear provider and set the status to disconnect.
-      await storage.write(key: 'provider', value: '');
-      await storage.write(key: 'status', value: disconnected);
-
       emit(SessionDisconnected());
     });
   }
@@ -59,7 +50,6 @@ class AuthCubit extends Cubit<AuthState> {
           emit(LoginWithMetamaskSuccess(url: uri));
         });
         _session = session;
-        _provider = metamask;
       } catch (e) {
         emit(LoginWithMetamaskFailed(errorCode: '', message: e.toString()));
       }
