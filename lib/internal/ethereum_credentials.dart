@@ -40,4 +40,13 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  EthereumAddress get address => throw UnimplementedError();
+
+  @override
+  MsgSignature signToEcSignature(Uint8List payload,
+      {int? chainId, bool isEIP1559 = false}) {
+    throw UnimplementedError();
+  }
 }

@@ -56,7 +56,7 @@ class GreetingCubit extends Cubit<GreetingState> {
   /// Parses the specifics of the Smart Contract (contract and function), launches MetaMask, then sends the write transaction.
   Future<void> updateGreeting(String text) async {
     try {
-      await web3Client.sendTransaction(
+      String txnHash = await web3Client.sendTransaction(
         wcCreds,
         Transaction.callContract(
           contract: contract,
@@ -66,6 +66,17 @@ class GreetingCubit extends Cubit<GreetingState> {
         ),
         chainId: 5,
       );
+
+      Timer txnTimer = Timer(const Duration(seconds: 1), () {});
+
+      txnTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+        TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
+        if (t != null) {
+          fetchGreeting();
+          txnTimer.cancel();
+        }
+      });
+
       emit(const UpdateGreetingSuccess());
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
