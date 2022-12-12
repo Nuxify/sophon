@@ -15,8 +15,8 @@ class MockWalletConnect extends Mock implements WalletConnect {
   void on<T>(String eventName, OnEvent<T> callback) {
     eventBus
         .on<Event<T>>()
-        .where((event) => event.name == eventName)
-        .listen((event) => callback(event.data));
+        .where((Event<T> event) => event.name == eventName)
+        .listen((Event<T> event) => callback(event.data));
   }
 }
 

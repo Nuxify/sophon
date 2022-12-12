@@ -26,11 +26,11 @@ class AuthCubit extends Cubit<AuthState> {
       );
       return;
     }
-    connector.on('connect', (session) async {
+    connector.on('connect', (Object? session) async {
       emit(EstablishConnectionSuccess(
           session: session, connector: connector, uri: walletConnectURI));
     });
-    connector.on('session_update', (session) {
+    connector.on('session_update', (Object? session) {
       _session = session;
     });
     connector.on('disconnect', (_) async {
@@ -45,7 +45,7 @@ class AuthCubit extends Cubit<AuthState> {
     if (!connector.connected) {
       try {
         SessionStatus session =
-            await connector.createSession(onDisplayUri: (uri) async {
+            await connector.createSession(onDisplayUri: (String uri) async {
           walletConnectURI = uri;
           emit(LoginWithMetamaskSuccess(url: uri));
         });

@@ -11,10 +11,10 @@ import 'package:sophon/configs/themes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
-    Key? key,
     required this.session,
     required this.connector,
     required this.uri,
+    Key? key,
   }) : super(key: key);
 
   final dynamic session;
@@ -67,10 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<GreetingCubit, GreetingState>(
       listener: (BuildContext context, GreetingState state) {
         if (state is SessionTerminated) {
-          Future.delayed(const Duration(seconds: 2), () {
+          Future<void>.delayed(const Duration(seconds: 2), () {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => const AuthenticationScreen(),
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const AuthenticationScreen(),
               ),
             );
           });
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: const BoxDecoration(color: Colors.white),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: width * 0.1,
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       bottom: Radius.circular(10),
                     ),
                     gradient: const LinearGradient(colors: flirtGradient),
-                    boxShadow: [
+                    boxShadow: <BoxShadow>[
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 5,
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white.withAlpha(60),
@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         margin: const EdgeInsets.only(bottom: 10),
                         child: Row(
-                          children: [
+                          children: <Widget>[
                             Text(
                               'Account Address: ',
                               style: theme.textTheme.subtitle2,
@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           horizontal: 20,
                         ),
                         child: Row(
-                          children: [
+                          children: <Widget>[
                             Text(
                               'Chain: ',
                               style: theme.textTheme.subtitle2,
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Column(
-                  children: [
+                  children: <Widget>[
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: width * 0.07,
@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: Radius.circular(10),
                           top: Radius.circular(10),
                         ),
-                        boxShadow: [
+                        boxShadow: <BoxShadow>[
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 5,
@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
+                        children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white.withAlpha(60),
@@ -233,7 +233,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             width: width,
                             child: BlocBuilder<GreetingCubit, GreetingState>(
-                              builder: (context, state) {
+                              builder:
+                                  (BuildContext context, GreetingState state) {
                                 if (state is FetchGreetingSuccess) {
                                   return Text(
                                     '"${state.message}"',
@@ -266,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: Radius.circular(10),
                           top: Radius.circular(10),
                         ),
-                        boxShadow: [
+                        boxShadow: <BoxShadow>[
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 5,
@@ -278,39 +279,42 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      child: Column(children: [
-                        TextField(
-                          controller: greetingTextController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white),
-                            ),
-                            hintText: 'What\'s in your head?',
-                            fillColor: Colors.white.withAlpha(60),
-                            filled: true,
-                          ),
-                        ),
-                        SizedBox(
-                          width: width,
-                          child: ElevatedButton.icon(
-                            onPressed: updateGreeting,
-                            icon: const Icon(Icons.edit),
-                            label: const Text('Update Greeting'),
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(0),
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.white.withAlpha(60),
+                      child: Column(
+                        children: <Widget>[
+                          TextField(
+                            controller: greetingTextController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
                               ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
+                              hintText: 'What\'s in your head?',
+                              fillColor: Colors.white.withAlpha(60),
+                              filled: true,
+                            ),
+                          ),
+                          SizedBox(
+                            width: width,
+                            child: ElevatedButton.icon(
+                              onPressed: updateGreeting,
+                              icon: const Icon(Icons.edit),
+                              label: const Text('Update Greeting'),
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                                backgroundColor: MaterialStateProperty.all(
+                                  Colors.white.withAlpha(60),
+                                ),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ]),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -322,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       top: Radius.circular(10),
                     ),
                     gradient: const LinearGradient(colors: flirtGradient),
-                    boxShadow: [
+                    boxShadow: <BoxShadow>[
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 5,
@@ -333,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       SizedBox(
                         width: width,
                         child: ElevatedButton.icon(
