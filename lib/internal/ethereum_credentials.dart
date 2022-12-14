@@ -19,7 +19,7 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
 
   @override
   Future<String> sendTransaction(Transaction transaction) async {
-    final hash = await provider.sendTransaction(
+    final String hash = await provider.sendTransaction(
       from: transaction.from!.hex,
       to: transaction.to?.hex,
       data: transaction.data,

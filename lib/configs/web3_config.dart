@@ -19,7 +19,7 @@ Future<WalletConnect> get walletConnect async {
       name: 'Nuxify Greeter Client',
       description: 'An app for converting pictures to NFT',
       url: 'https://github.com/Nuxify/Sophon',
-      icons: [
+      icons: <String>[
         'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
       ],
     ),

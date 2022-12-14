@@ -1,4 +1,4 @@
-String getNetworkName(chainId) {
+String getNetworkName(int chainId) {
   switch (chainId) {
     case 1:
       return 'Ethereum Mainnet';

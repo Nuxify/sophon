@@ -13,7 +13,7 @@ import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class MockAuthCubit extends MockCubit<AuthState> implements AuthCubit {}
 
-class MockSecureStorageCubit extends MockCubit implements SecureStorageCubit {}
+class MockSecureStorageCubit extends Mock implements SecureStorageCubit {}
 
 class MockWalletConnect extends Mock implements WalletConnect {
   @override
@@ -41,7 +41,7 @@ void main() {
   }) async =>
       tester.pumpWidget(
         MultiBlocProvider(
-          providers: [
+          providers: <BlocProvider<dynamic>>[
             BlocProvider<AuthCubit>(
               create: (BuildContext context) => mockAuthCubit,
             ),
@@ -77,12 +77,12 @@ void main() {
 
       whenListen(
         mockAuthCubit,
-        Stream.fromIterable([
+        Stream<AuthState>.fromIterable(<AuthState>[
           EstablishConnectionSuccess(
             connector: MockWalletConnect(),
             session: SessionStatus(
               chainId: 1,
-              accounts: [],
+              accounts: <String>[],
             ),
             uri: '',
           ),
