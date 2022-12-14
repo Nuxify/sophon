@@ -29,7 +29,7 @@ void main() {
             child: HomeScreen(
               connector: mockWalletConnect,
               session: SessionStatus(
-                accounts: [],
+                accounts: <String>[],
                 chainId: 1,
               ),
               uri: '',

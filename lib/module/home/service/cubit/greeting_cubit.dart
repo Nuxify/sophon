@@ -62,7 +62,7 @@ class GreetingCubit extends Cubit<GreetingState> {
           contract: contract,
           function: setGreetingFunction,
           from: EthereumAddress.fromHex(sender),
-          parameters: [text],
+          parameters: <String>[text],
         ),
         chainId: 5,
       );
@@ -86,8 +86,11 @@ class GreetingCubit extends Cubit<GreetingState> {
   Future<void> fetchGreeting() async {
     ContractFunction getGreetingFunction = contract.function('greet');
     try {
-      List<dynamic> response = await web3Client
-          .call(contract: contract, function: getGreetingFunction, params: []);
+      List<dynamic> response = await web3Client.call(
+        contract: contract,
+        function: getGreetingFunction,
+        params: <dynamic>[],
+      );
       emit(FetchGreetingSuccess(message: response[0]));
     } catch (e) {
       emit(FetchGreetingFailed(errorCode: '', message: e.toString()));

@@ -28,11 +28,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     final double height = MediaQuery.of(context).size.height;
 
     return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
+      listener: (BuildContext context, AuthState state) {
         if (state is EstablishConnectionSuccess) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => HomeScreen(
                 session: state.session,
                 connector: state.connector,
                 uri: state.uri,
@@ -62,7 +62,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(bottom: height * 0.4),
                   child: Text(
@@ -81,7 +81,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       Text(
                         'Connect your Ethereum Wallet',
                         textAlign: TextAlign.center,

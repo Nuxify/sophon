@@ -53,7 +53,10 @@ void main() {
         'On initializeProvider, it should trigger deployed contract function once and emits InitializeProviderSuccess.',
         () {
       when(() => mockDeployedContract.function(any()))
-          .thenReturn(const ContractFunction('', []));
+          .thenReturn(const ContractFunction(
+        '',
+        <FunctionParameter<dynamic>>[],
+      ));
 
       final GreetingCubit cubit = GreetingCubit(
         contract: mockDeployedContract,

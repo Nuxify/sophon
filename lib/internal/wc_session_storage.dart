@@ -4,20 +4,20 @@ import 'package:sophon/infrastructures/repository/secure_storage_repository.dart
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class WalletConnectSecureStorage implements SessionStorage {
+  WalletConnectSecureStorage({this.storageKey = 'wc_session'});
+
   final String storageKey;
   final SecureStorageRepository _storage = SecureStorageRepository();
 
-  WalletConnectSecureStorage({this.storageKey = 'wc_session'});
-
   @override
   Future<WalletConnectSession?> getSession() async {
-    final json = await _storage.read(key: storageKey);
+    final String? json = await _storage.read(key: storageKey);
     if (json == null) {
       return null;
     }
 
     try {
-      final data = jsonDecode(json);
+      final Map<String, dynamic> data = jsonDecode(json);
       return WalletConnectSession.fromJson(data);
     } on FormatException {
       return null;
@@ -25,12 +25,12 @@ class WalletConnectSecureStorage implements SessionStorage {
   }
 
   @override
-  Future store(WalletConnectSession session) async {
+  Future<void> store(WalletConnectSession session) async {
     await _storage.write(key: storageKey, value: jsonEncode(session.toJson()));
   }
 
   @override
-  Future removeSession() async {
+  Future<void> removeSession() async {
     await _storage.delete(key: storageKey);
   }
 }
