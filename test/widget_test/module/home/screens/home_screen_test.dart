@@ -4,28 +4,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
-import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/utils/web3_utils.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
-class MockGreetingCubit extends MockCubit<GreetingState>
-    implements GreetingCubit {}
+class MockWeb3Cubit extends MockCubit<Web3State> implements Web3Cubit {}
 
 class MockWalletConnect extends Mock implements WalletConnect {}
 
 void main() {
-  late MockGreetingCubit mockGreetingCubit;
+  late MockWeb3Cubit mockWeb3Cubit;
   late MockWalletConnect mockWalletConnect;
 
   setUp(() {
-    mockGreetingCubit = MockGreetingCubit();
+    mockWeb3Cubit = MockWeb3Cubit();
     mockWalletConnect = MockWalletConnect();
   });
 
   Future<void> pumpWidget(WidgetTester tester) async => tester.pumpWidget(
         MaterialApp(
-          home: BlocProvider<GreetingCubit>(
-            create: (BuildContext context) => mockGreetingCubit,
+          home: BlocProvider<Web3Cubit>(
+            create: (BuildContext context) => mockWeb3Cubit,
             child: HomeScreen(
               connector: mockWalletConnect,
               session: SessionStatus(
@@ -43,11 +42,11 @@ void main() {
       const int chainId = 5;
       testWidgets('Account address should be visible.',
           (WidgetTester tester) async {
-        when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
+        when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
         whenListen(
-          mockGreetingCubit,
-          Stream<GreetingState>.fromIterable(
-            <GreetingState>[
+          mockWeb3Cubit,
+          Stream<Web3State>.fromIterable(
+            <Web3State>[
               InitializeProviderSuccess(
                 accountAddress: accountAddress,
                 networkName: getNetworkName(chainId),
@@ -63,12 +62,12 @@ void main() {
       });
       testWidgets('Network name of chain ID should be visible.',
           (WidgetTester tester) async {
-        when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
+        when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
         final String networkName = getNetworkName(chainId);
         whenListen(
-          mockGreetingCubit,
-          Stream<GreetingState>.fromIterable(
-            <GreetingState>[
+          mockWeb3Cubit,
+          Stream<Web3State>.fromIterable(
+            <Web3State>[
               InitializeProviderSuccess(
                 accountAddress: accountAddress,
                 networkName: networkName,
@@ -87,12 +86,12 @@ void main() {
       testWidgets(
           'Greetings Content on loading should show linear progress indicator.',
           (WidgetTester tester) async {
-        when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
+        when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
 
         whenListen(
-          mockGreetingCubit,
-          Stream<GreetingState>.fromIterable(
-            <GreetingState>[
+          mockWeb3Cubit,
+          Stream<Web3State>.fromIterable(
+            <Web3State>[
               FetchGreetingLoading(),
             ],
           ),
@@ -107,12 +106,12 @@ void main() {
           (WidgetTester tester) async {
         const String message = 'Hello this is the updated greetings';
 
-        when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
+        when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
 
         whenListen(
-          mockGreetingCubit,
-          Stream<GreetingState>.fromIterable(
-            <GreetingState>[
+          mockWeb3Cubit,
+          Stream<Web3State>.fromIterable(
+            <Web3State>[
               const FetchGreetingSuccess(message: message),
             ],
           ),
@@ -127,7 +126,7 @@ void main() {
         testWidgets(
             'Update text field should be visible and also the button update greetings',
             (WidgetTester tester) async {
-          when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
+          when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
 
           await pumpWidget(tester);
           await tester.pump();
@@ -140,8 +139,8 @@ void main() {
         testWidgets(
             'On click edit button should trigger updateGreeting function inside cubit.',
             (WidgetTester tester) async {
-          when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
-          when(() => mockGreetingCubit.updateGreeting(any()))
+          when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
+          when(() => mockWeb3Cubit.updateGreeting(any()))
               .thenAnswer((_) async {});
 
           await pumpWidget(tester);
@@ -155,21 +154,21 @@ void main() {
           await tester.pump();
 
           verify(
-            () => mockGreetingCubit.updateGreeting(any()),
+            () => mockWeb3Cubit.updateGreeting(any()),
           ).called(1);
         });
 
         testWidgets('On fail update it should show snackbar and related error.',
             (WidgetTester tester) async {
-          when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
-          when(() => mockGreetingCubit.updateGreeting(any()))
+          when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
+          when(() => mockWeb3Cubit.updateGreeting(any()))
               .thenAnswer((_) async {});
           const String errorCode = '404';
           const String errorMessage = 'Something went wrong';
           whenListen(
-            mockGreetingCubit,
-            Stream<GreetingState>.fromIterable(
-              <GreetingState>[
+            mockWeb3Cubit,
+            Stream<Web3State>.fromIterable(
+              <Web3State>[
                 const FetchGreetingFailed(
                     errorCode: errorCode, message: errorMessage),
               ],
@@ -190,9 +189,8 @@ void main() {
       testWidgets(
           'On click disconnect button should trigger closeConnection function.',
           (WidgetTester tester) async {
-        when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
-        when(() => mockGreetingCubit.closeConnection())
-            .thenAnswer((_) async {});
+        when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
+        when(() => mockWeb3Cubit.closeConnection()).thenAnswer((_) async {});
 
         await pumpWidget(tester);
         await tester.pump();
@@ -205,7 +203,7 @@ void main() {
         await tester.pump();
 
         verify(
-          () => mockGreetingCubit.closeConnection(),
+          () => mockWeb3Cubit.closeConnection(),
         ).called(1);
       });
     });

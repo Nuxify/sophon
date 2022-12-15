@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
-import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void updateGreeting() {
     launchUrlString(widget.uri, mode: LaunchMode.externalApplication);
 
-    context.read<GreetingCubit>().updateGreeting(greetingTextController.text);
+    context.read<Web3Cubit>().updateGreeting(greetingTextController.text);
     greetingTextController.text = '';
   }
 
@@ -51,9 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     /// Execute after frame is rendered to get the emit state of InitializeProviderSuccess
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<GreetingCubit>().initializeProvider(
-            session: widget.session,
+      (_) => context.read<Web3Cubit>().initializeProvider(
             connector: widget.connector,
+            session: widget.session,
           ),
     );
   }
@@ -64,8 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    return BlocListener<GreetingCubit, GreetingState>(
-      listener: (BuildContext context, GreetingState state) {
+    return BlocListener<Web3Cubit, Web3State>(
+      listener: (BuildContext context, Web3State state) {
         if (state is SessionTerminated) {
           Future<void>.delayed(const Duration(seconds: 2), () {
             Navigator.of(context).pushReplacement(
@@ -232,9 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               horizontal: 20,
                             ),
                             width: width,
-                            child: BlocBuilder<GreetingCubit, GreetingState>(
-                              builder:
-                                  (BuildContext context, GreetingState state) {
+                            child: BlocBuilder<Web3Cubit, Web3State>(
+                              builder: (BuildContext context, Web3State state) {
                                 if (state is FetchGreetingSuccess) {
                                   return Text(
                                     '"${state.message}"',
@@ -341,8 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         width: width,
                         child: ElevatedButton.icon(
-                          onPressed:
-                              context.read<GreetingCubit>().closeConnection,
+                          onPressed: context.read<Web3Cubit>().closeConnection,
                           icon: const Icon(
                             Icons.power_settings_new,
                           ),
