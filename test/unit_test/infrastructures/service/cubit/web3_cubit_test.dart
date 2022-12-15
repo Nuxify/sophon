@@ -49,15 +49,7 @@ void main() {
     registerFallbackValue(MockContractFunction());
   });
   group('Web3 cubit', () {
-    test(
-        'On initializeProvider, it should trigger deployed contract function once and emits InitializeProviderSuccess.',
-        () {
-      when(() => mockDeployedContract.function(any()))
-          .thenReturn(const ContractFunction(
-        '',
-        <FunctionParameter<dynamic>>[],
-      ));
-
+    test('On initializeProvider, emits InitializeProviderSuccess.', () {
       final Web3Cubit cubit = Web3Cubit(
         greeterContract: mockDeployedContract,
         web3Client: mockWeb3Client,
@@ -71,15 +63,13 @@ void main() {
       cubit.stream.listen((Web3State state) {
         expect(state.runtimeType, InitializeProviderSuccess);
       });
-
-      verify(() => mockDeployedContract.function(any())).called(1);
     });
 
     group('Update greetings.', () {
       const String updateText = 'Hello world';
 
       test(
-          'On success, it should trigger sendTransaction and emits UpdateGreetingSuccess.',
+          'On success, it should trigger sendTransaction, and trigger getTransactionReceipt and emits UpdateGreetingSuccess.',
           () async {
         when(() => mockWeb3Client.sendTransaction(any(), any(),
             chainId: any(named: 'chainId'),
@@ -87,12 +77,21 @@ void main() {
                 any(named: 'fetchChainIdFromNetworkId'))).thenAnswer((_) async {
           return '';
         });
+        when(() => mockWeb3Client.getTransactionReceipt(any()))
+            .thenAnswer((_) async => null);
 
+        when(() => mockWeb3Client.call(
+            contract: any(named: 'contract'),
+            function: any(named: 'function'),
+            params: any(named: 'params'))).thenAnswer((_) async {
+          return <String>['result response'];
+        });
         final Web3Cubit cubit = Web3Cubit(
-          greeterContract: mockDeployedContract,
+          greeterContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
+        cubit.sessionStatus = SessionStatus(accounts: <String>[], chainId: 1);
         cubit.wcCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
@@ -121,7 +120,7 @@ void main() {
           .thenThrow('Something went wrong');
 
       final Web3Cubit cubit = Web3Cubit(
-        greeterContract: mockDeployedContract,
+        greeterContract: await _deployedContract,
         web3Client: mockWeb3Client,
       );
 
