@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/internal/ethereum_credentials.dart';
 import 'package:sophon/internal/web3_contract.dart';
-import 'package:sophon/utils/web3_utils.dart';
+import 'package:sophon/internal/web3_utils.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 

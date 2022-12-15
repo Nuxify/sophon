@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
-import 'package:sophon/utils/web3_utils.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class MockWeb3Cubit extends MockCubit<Web3State> implements Web3Cubit {}

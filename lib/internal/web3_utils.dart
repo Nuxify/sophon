@@ -1,3 +1,4 @@
+/// Get network name by [chainId]
 String getNetworkName(int chainId) {
   switch (chainId) {
     case 1:
