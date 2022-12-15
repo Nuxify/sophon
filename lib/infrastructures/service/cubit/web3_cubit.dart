@@ -84,9 +84,9 @@ class Web3Cubit extends Cubit<Web3State> {
         chainId: 5,
       );
 
-      Timer txnTimer = Timer(const Duration(seconds: 1), () {});
-
-      txnTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+      late Timer txnTimer;
+      txnTimer = Timer.periodic(Duration(milliseconds: sessionStatus.chainId),
+          (_) async {
         TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
         if (t != null) {
           fetchGreeting();
