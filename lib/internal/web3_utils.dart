@@ -1,4 +1,5 @@
 /// Get block time by [chainId]
+/// Returned time is in milliseconds (ms)
 int getBlockTime(int chainId) {
   // TODO: specify more blocktime based from chains
   switch (chainId) {
