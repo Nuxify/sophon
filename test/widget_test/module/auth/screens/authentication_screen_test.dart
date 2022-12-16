@@ -6,7 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
-import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/test/main_test.dart';
 import 'package:sophon/test/observer_tester.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
@@ -20,20 +20,19 @@ class MockWalletConnect extends Mock implements WalletConnect {
   bool get connected => true;
 }
 
-class MockGreetingCubit extends MockCubit<GreetingState>
-    implements GreetingCubit {}
+class MockWeb3Cubit extends MockCubit<Web3State> implements Web3Cubit {}
 
 void main() {
   late MockAuthCubit mockAuthCubit;
   late MockSecureStorageCubit mockSecureStorageCubit;
-  late MockGreetingCubit mockGreetingCubit;
+  late MockWeb3Cubit mockWeb3Cubit;
 
   final List<String> connectWalletOptions = <String>['Login with Metamask'];
 
   setUp(() {
     mockAuthCubit = MockAuthCubit();
     mockSecureStorageCubit = MockSecureStorageCubit();
-    mockGreetingCubit = MockGreetingCubit();
+    mockWeb3Cubit = MockWeb3Cubit();
   });
   Future<void> pumpWidget(
     WidgetTester tester, {
@@ -48,8 +47,8 @@ void main() {
             BlocProvider<SecureStorageCubit>(
               create: (BuildContext context) => mockSecureStorageCubit,
             ),
-            BlocProvider<GreetingCubit>(
-              create: (BuildContext context) => mockGreetingCubit,
+            BlocProvider<Web3Cubit>(
+              create: (BuildContext context) => mockWeb3Cubit,
             ),
           ],
           child: universalPumper(
@@ -73,7 +72,7 @@ void main() {
       final TestObserver observer = TestObserver()
         ..onReplaced = (Route<dynamic>? route, Route<dynamic>? previousRoute) =>
             isNavigatedToHomeScreen = true;
-      when(() => mockGreetingCubit.state).thenReturn(const GreetingState());
+      when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
 
       whenListen(
         mockAuthCubit,

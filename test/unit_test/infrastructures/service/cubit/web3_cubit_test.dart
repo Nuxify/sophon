@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sophon/internal/ethereum_credentials.dart';
-import 'package:sophon/module/home/service/cubit/greeting_cubit.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -48,62 +48,56 @@ void main() {
     registerFallbackValue(MockDeployedContract());
     registerFallbackValue(MockContractFunction());
   });
-  group('Greetings cubit.', () {
-    test(
-        'On initializeProvider, it should trigger deployed contract function once and emits InitializeProviderSuccess.',
-        () {
-      when(() => mockDeployedContract.function(any()))
-          .thenReturn(const ContractFunction(
-        '',
-        <FunctionParameter<dynamic>>[],
-      ));
-
-      final GreetingCubit cubit = GreetingCubit(
-        contract: mockDeployedContract,
+  group('Web3 cubit', () {
+    test('On initializeProvider, emits InitializeProviderSuccess.', () {
+      final Web3Cubit cubit = Web3Cubit(
+        greeterContract: mockDeployedContract,
         web3Client: mockWeb3Client,
       );
       cubit.initializeProvider(
+        connector: mockWalletConnect,
         session: SessionStatus(
             accounts: MockWalletConnect.accounts, chainId: chainId),
-        connector: mockWalletConnect,
       );
 
-      cubit.stream.listen((GreetingState state) {
+      cubit.stream.listen((Web3State state) {
         expect(state.runtimeType, InitializeProviderSuccess);
       });
-
-      verify(() => mockDeployedContract.function(any())).called(1);
     });
 
     group('Update greetings.', () {
       const String updateText = 'Hello world';
 
       test(
-          'On success, it should trigqger sendTransaction and emits UpdateGreetingSuccess.',
+          'On success, it should trigger sendTransaction, and trigger getTransactionReceipt and emits UpdateGreetingSuccess.',
           () async {
-        /// Use local abi to map the parametrs of
-        final DeployedContract contract = await _deployedContract;
-
         when(() => mockWeb3Client.sendTransaction(any(), any(),
             chainId: any(named: 'chainId'),
             fetchChainIdFromNetworkId:
                 any(named: 'fetchChainIdFromNetworkId'))).thenAnswer((_) async {
           return '';
         });
+        when(() => mockWeb3Client.getTransactionReceipt(any()))
+            .thenAnswer((_) async => null);
 
-        final GreetingCubit cubit = GreetingCubit(
-          contract: mockDeployedContract,
+        when(() => mockWeb3Client.call(
+            contract: any(named: 'contract'),
+            function: any(named: 'function'),
+            params: any(named: 'params'))).thenAnswer((_) async {
+          return <String>['result response'];
+        });
+        final Web3Cubit cubit = Web3Cubit(
+          greeterContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
-        cubit.wcCreds = MockWalletConnectEthereumCredentials();
-        cubit.setGreetingFunction = contract.function('setGreeting');
-
+        cubit.sessionStatus = SessionStatus(accounts: <String>[], chainId: 1);
+        cubit.wcCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
         cubit.updateGreeting(updateText);
 
-        cubit.stream.listen((GreetingState state) {
+        cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, UpdateGreetingSuccess);
         });
 
@@ -117,9 +111,6 @@ void main() {
     test(
         'On fail, it should trigger sendTransaction but throws error then it will emits UpdateGreetingFailed.',
         () async {
-      /// Use local abi to map the parametrs of
-      final DeployedContract contract = await _deployedContract;
-
       const String updateText = 'Hello world';
 
       when(() => mockWeb3Client.sendTransaction(any(), any(),
@@ -128,19 +119,17 @@ void main() {
                   any(named: 'fetchChainIdFromNetworkId')))
           .thenThrow('Something went wrong');
 
-      final GreetingCubit cubit = GreetingCubit(
-        contract: mockDeployedContract,
+      final Web3Cubit cubit = Web3Cubit(
+        greeterContract: await _deployedContract,
         web3Client: mockWeb3Client,
       );
 
-      cubit.wcCreds = MockWalletConnectEthereumCredentials();
-      cubit.setGreetingFunction = contract.function('setGreeting');
-
+      cubit.wcCredentials = MockWalletConnectEthereumCredentials();
       cubit.sender = MockDeployedContract.sampleHexString;
 
       cubit.updateGreeting(updateText);
 
-      cubit.stream.listen((GreetingState state) {
+      cubit.stream.listen((Web3State state) {
         expect(state.runtimeType, UpdateGreetingFailed);
       });
 
@@ -160,14 +149,14 @@ void main() {
             params: any(named: 'params'))).thenAnswer((_) async {
           return <String>['result response'];
         });
-        final GreetingCubit cubit = GreetingCubit(
-          contract: await _deployedContract,
+        final Web3Cubit cubit = Web3Cubit(
+          greeterContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
         cubit.fetchGreeting();
 
-        cubit.stream.listen((GreetingState state) {
+        cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, FetchGreetingSuccess);
         });
         verify(() => mockWeb3Client.call(
@@ -184,14 +173,14 @@ void main() {
             function: any(named: 'function'),
             params: any(named: 'params'))).thenThrow('Something went wrong.');
 
-        final GreetingCubit cubit = GreetingCubit(
-          contract: await _deployedContract,
+        final Web3Cubit cubit = Web3Cubit(
+          greeterContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
         cubit.fetchGreeting();
 
-        cubit.stream.listen((GreetingState state) {
+        cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, FetchGreetingFailed);
         });
         verify(() => mockWeb3Client.call(

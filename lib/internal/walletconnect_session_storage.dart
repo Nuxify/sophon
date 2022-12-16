@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
