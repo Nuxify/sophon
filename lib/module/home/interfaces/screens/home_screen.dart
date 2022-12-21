@@ -31,10 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController greetingTextController = TextEditingController();
 
   ButtonStyle buttonStyle = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all(Colors.transparent),
     elevation: MaterialStateProperty.all(0),
-    side: MaterialStateProperty.all(
-      const BorderSide(color: Colors.white),
+    backgroundColor: MaterialStateProperty.all(
+      Colors.white.withAlpha(60),
+    ),
+    shape: MaterialStateProperty.all(
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
     ),
   );
 
@@ -233,6 +235,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             width: width,
                             child: BlocBuilder<Web3Cubit, Web3State>(
+                              buildWhen:
+                                  (Web3State previous, Web3State current) =>
+                                      current is FetchGreetingSuccess ||
+                                      current is UpdateGreetingLoading,
                               builder: (BuildContext context, Web3State state) {
                                 if (state is FetchGreetingSuccess) {
                                   return Text(
@@ -295,21 +301,34 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SizedBox(
                             width: width,
-                            child: ElevatedButton.icon(
-                              onPressed: updateGreeting,
-                              icon: const Icon(Icons.edit),
-                              label: const Text('Update Greeting'),
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor: MaterialStateProperty.all(
-                                  Colors.white.withAlpha(60),
-                                ),
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                ),
-                              ),
+                            child: BlocBuilder<Web3Cubit, Web3State>(
+                              buildWhen:
+                                  (Web3State previous, Web3State current) =>
+                                      current is UpdateGreetingLoading ||
+                                      current is UpdateGreetingSuccess ||
+                                      current is UpdateGreetingFailed,
+                              builder: (BuildContext context, Web3State state) {
+                                if (state is UpdateGreetingLoading) {
+                                  return ElevatedButton.icon(
+                                    onPressed: () {},
+                                    style: buttonStyle,
+                                    icon: SizedBox(
+                                      height: height * 0.03,
+                                      width: height * 0.03,
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                    label: const Text(''),
+                                  );
+                                }
+                                return ElevatedButton.icon(
+                                  onPressed: updateGreeting,
+                                  icon: const Icon(Icons.edit),
+                                  label: const Text('Update Greeting'),
+                                  style: buttonStyle,
+                                );
+                              },
                             ),
                           ),
                         ],

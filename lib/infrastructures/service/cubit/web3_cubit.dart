@@ -72,6 +72,7 @@ class Web3Cubit extends Cubit<Web3State> {
 
   /// Update greeter contract with provided [text]
   Future<void> updateGreeting(String text) async {
+    emit(UpdateGreetingLoading());
     try {
       String txnHash = await web3Client.sendTransaction(
         wcCredentials,
@@ -90,12 +91,11 @@ class Web3Cubit extends Cubit<Web3State> {
           (_) async {
         TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
         if (t != null) {
+          emit(const UpdateGreetingSuccess());
           fetchGreeting();
           txnTimer.cancel();
         }
       });
-
-      emit(const UpdateGreetingSuccess());
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
