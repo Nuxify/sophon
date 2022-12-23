@@ -25,6 +25,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.HOME"/> 
+                <category android:name="android.intent.category.DEFAULT"/>
+                
                 <!-- <data android:scheme="wc:" /> -->
 
             </intent-filter>
@@ -36,4 +39,7 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
+    <queries>
+        <package android:name="io.metamask" /> 
+    </queries>
 </manifest>
