@@ -82,7 +82,7 @@ class Web3Cubit extends Cubit<Web3State> {
           from: EthereumAddress.fromHex(sender),
           parameters: <String>[text],
         ),
-        chainId: 5,
+        chainId: sessionStatus.chainId,
       );
 
       late Timer txnTimer;
