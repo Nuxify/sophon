@@ -8,7 +8,7 @@ Template architecture closely resembles our other Flutter template: https://gith
 
 ## Demo
 
-Download the Flirt demo app from Google Play Store: https://play.google.com/store/apps/details?id=com.nuxify.sophon
+Download the Sophon demo app from Google Play Store: https://play.google.com/store/apps/details?id=com.nuxify.sophon
 
 Coming soon in Apple App Store.
 
