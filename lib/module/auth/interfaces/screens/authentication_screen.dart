@@ -6,6 +6,7 @@ import 'package:sophon/internal/wallet_external_configuration.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  
   Future<void> _launchApp() async {
     final bool isInstalled = await LaunchApp.isAppInstalled(
       androidPackageName: metaMaskPackageName,
@@ -52,6 +52,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     final double height = MediaQuery.of(context).size.height;
 
     return BlocListener<AuthCubit, AuthState>(
+      listenWhen: (AuthState previous, AuthState current) =>
+          current is EstablishConnectionSuccess ||
+          current is LoginWithMetamaskSuccess ||
+          current is LoginWithMetamaskFailed ||
+          current is InitializeWeb3AuthSuccess ||
+          current is LoginWithGoogleSuccess,
       listener: (BuildContext context, AuthState state) {
         if (state is EstablishConnectionSuccess) {
           Navigator.of(context).pushReplacement(
@@ -70,6 +76,16 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             SnackBar(
               content: Text(state.message),
               backgroundColor: theme.errorColor,
+            ),
+          );
+        } else if (state is LoginWithGoogleSuccess) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => HomeScreen(
+                session: 'state.session',
+                connector: WalletConnect(),
+                uri: 'state.uri',
+              ),
             ),
           );
         }
@@ -139,6 +155,23 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                             ),
                           ),
                         ],
+                      ),
+                      BlocBuilder<AuthCubit, AuthState>(
+                        buildWhen: (AuthState previous, AuthState current) =>
+                            current is InitializeWeb3AuthSuccess,
+                        builder: (BuildContext context, AuthState state) {
+                          if (state is InitializeWeb3AuthSuccess) {
+                            return ElevatedButton(
+                              onPressed: () =>
+                                  context.read<AuthCubit>().loginWithGoogle(),
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                              ),
+                              child: const Text('Login via Google'),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
                     ],
                   ),

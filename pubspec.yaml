@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.5
   url_launcher: ^6.1.5
   walletconnect_dart: ^0.0.11
+  web3auth_flutter: ^1.3.0
   web3dart: ^2.5.1
 
 dev_dependencies:
