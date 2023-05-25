@@ -67,15 +67,12 @@ class Web3Cubit extends Cubit<Web3State> {
   /// Initialize Google provider
   Future<void> initializeGoogleProvider() async {
     final String privateKey = await storage.read(key: lsPrivateKey) ?? '';
-    BigInt cId = await web3Client.getChainId();
-    EthPrivateKey credentials = EthPrivateKey.fromHex(privateKey);
+    final BigInt cId = await web3Client.getChainId();
+    final EthPrivateKey credentials = EthPrivateKey.fromHex(privateKey);
     final EthereumAddress address = credentials.address;
 
     privCredentials = credentials;
     sender = address.hex;
-
-    EtherAmount balance = await web3Client.getBalance(address);
-    log('This is how much you own you capitalist cuck: ${balance.getValueInUnit(EtherUnit.ether)}');
 
     /// periodically fetch greeting from chain
     fetchGreetingTimer =
