@@ -1,9 +1,9 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
+import 'package:sophon/internal/local_storage.dart';
 import 'package:sophon/internal/string_constants.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3auth_flutter/enums.dart';
@@ -73,7 +73,10 @@ class AuthCubit extends Cubit<AuthState> {
           mfaLevel: MFALevel.OPTIONAL,
         ),
       );
-      log('logged in! $response');
+      storage.write(
+        key: lsPrivateKey,
+        value: response.privKey ?? '',
+      );
       emit(LoginWithGoogleSuccess());
     } catch (e) {
       emit(const LoginWithGoogleFailed(message: '', errorCode: ''));

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/internal/wallet_external_configuration.dart';
+import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({Key? key}) : super(key: key);
@@ -41,8 +41,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => context.read<AuthCubit>().initiateListeners());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AuthCubit>().initiateListeners();
+      context.read<AuthCubit>().initializeWeb3Auth();
+    });
   }
 
   @override
@@ -66,6 +68,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 session: state.session,
                 connector: state.connector,
                 uri: state.uri,
+                loginType: LoginType.metaMask,
               ),
             ),
           );
@@ -81,11 +84,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         } else if (state is LoginWithGoogleSuccess) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute<void>(
-              builder: (BuildContext context) => HomeScreen(
-                session: 'state.session',
-                connector: WalletConnect(),
-                uri: 'state.uri',
-              ),
+              builder: (BuildContext context) =>
+                  const HomeScreen(loginType: LoginType.google),
             ),
           );
         }

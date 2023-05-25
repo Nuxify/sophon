@@ -29,3 +29,8 @@ String getNetworkName(int chainId) {
       return 'Unknown Chain';
   }
 }
+
+enum LoginType {
+  metaMask,
+  google,
+}

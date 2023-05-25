@@ -6,12 +6,12 @@ class Web3State {
 
 /// Event classes
 
-class InitializeProviderLoading extends Web3State {
-  InitializeProviderLoading();
+class InitializeMetaMaskProviderLoading extends Web3State {
+  InitializeMetaMaskProviderLoading();
 }
 
-class InitializeProviderSuccess extends Web3State {
-  const InitializeProviderSuccess({
+class InitializeMetaMaskProviderSuccess extends Web3State {
+  const InitializeMetaMaskProviderSuccess({
     required this.accountAddress,
     required this.networkName,
   });
@@ -20,8 +20,8 @@ class InitializeProviderSuccess extends Web3State {
   final String networkName;
 }
 
-class InitializeProviderFailed extends Web3State {
-  const InitializeProviderFailed({
+class InitializeMetaMaskProviderFailed extends Web3State {
+  const InitializeMetaMaskProviderFailed({
     required this.errorCode,
     required this.message,
   });
@@ -66,6 +66,28 @@ class UpdateGreetingSuccess extends Web3State {
 
 class UpdateGreetingFailed extends Web3State {
   const UpdateGreetingFailed({
+    required this.errorCode,
+    required this.message,
+  });
+
+  final String errorCode;
+  final String message;
+}
+
+class InitializeGoogleProviderLoading extends Web3State {}
+
+class InitializeGoogleProviderSuccess extends Web3State {
+  const InitializeGoogleProviderSuccess({
+    required this.accountAddress,
+    required this.networkName,
+  });
+
+  final String accountAddress;
+  final String networkName;
+}
+
+class InitializeGoogleProviderFailed extends Web3State {
+  const InitializeGoogleProviderFailed({
     required this.errorCode,
     required this.message,
   });

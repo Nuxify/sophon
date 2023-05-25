@@ -32,6 +32,7 @@ void main() {
                 chainId: 1,
               ),
               uri: '',
+              loginType: LoginType.metaMask,
             ),
           ),
         ),
@@ -47,7 +48,7 @@ void main() {
           mockWeb3Cubit,
           Stream<Web3State>.fromIterable(
             <Web3State>[
-              InitializeProviderSuccess(
+              InitializeMetaMaskProviderSuccess(
                 accountAddress: accountAddress,
                 networkName: getNetworkName(chainId),
               )
@@ -68,7 +69,7 @@ void main() {
           mockWeb3Cubit,
           Stream<Web3State>.fromIterable(
             <Web3State>[
-              InitializeProviderSuccess(
+              InitializeMetaMaskProviderSuccess(
                 accountAddress: accountAddress,
                 networkName: networkName,
               )
@@ -140,7 +141,7 @@ void main() {
             'On click edit button should trigger updateGreeting function inside cubit.',
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-          when(() => mockWeb3Cubit.updateGreeting(any()))
+          when(() => mockWeb3Cubit.updateGreetingViaMetaMask(any()))
               .thenAnswer((_) async {});
 
           await pumpWidget(tester);
@@ -154,14 +155,14 @@ void main() {
           await tester.pump();
 
           verify(
-            () => mockWeb3Cubit.updateGreeting(any()),
+            () => mockWeb3Cubit.updateGreetingViaMetaMask(any()),
           ).called(1);
         });
 
         testWidgets('On fail update it should show snackbar and related error.',
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-          when(() => mockWeb3Cubit.updateGreeting(any()))
+          when(() => mockWeb3Cubit.updateGreetingViaMetaMask(any()))
               .thenAnswer((_) async {});
           const String errorCode = '404';
           const String errorMessage = 'Something went wrong';
@@ -190,7 +191,8 @@ void main() {
           'On click disconnect button should trigger closeConnection function.',
           (WidgetTester tester) async {
         when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-        when(() => mockWeb3Cubit.closeConnection()).thenAnswer((_) async {});
+        when(() => mockWeb3Cubit.closeConnection(LoginType.metaMask))
+            .thenAnswer((_) async {});
 
         await pumpWidget(tester);
         await tester.pump();
@@ -203,7 +205,7 @@ void main() {
         await tester.pump();
 
         verify(
-          () => mockWeb3Cubit.closeConnection(),
+          () => mockWeb3Cubit.closeConnection(LoginType.metaMask),
         ).called(1);
       });
     });

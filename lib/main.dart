@@ -38,12 +38,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SecureStorageRepository secureStorageRepository =
+        SecureStorageRepository();
+
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
         BlocProvider<Web3Cubit>(
           create: (BuildContext context) => Web3Cubit(
             web3Client: web3client,
             greeterContract: greeterContract,
+            storage: secureStorageRepository,
           ),
         ),
         BlocProvider<AuthCubit>(
@@ -76,12 +80,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<AuthCubit>().initializeWeb3Auth();
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(<DeviceOrientation>[
