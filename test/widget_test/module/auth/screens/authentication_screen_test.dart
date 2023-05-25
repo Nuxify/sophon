@@ -1,12 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
-import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/test/main_test.dart';
 import 'package:sophon/test/observer_tester.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
@@ -27,7 +28,10 @@ void main() {
   late MockSecureStorageCubit mockSecureStorageCubit;
   late MockWeb3Cubit mockWeb3Cubit;
 
-  final List<String> connectWalletOptions = <String>['Login with Metamask'];
+  final List<String> connectWalletOptions = <String>[
+    'Login with Metamask',
+    'Login via Google',
+  ];
 
   setUp(() {
     mockAuthCubit = MockAuthCubit();
@@ -61,12 +65,14 @@ void main() {
     when(() => mockAuthCubit.state).thenReturn(const AuthState());
     when(() => mockSecureStorageCubit.read(key: any(named: 'key')))
         .thenAnswer((_) async => '');
+    when(() => mockAuthCubit.initializeWeb3Auth()).thenAnswer((_) async {});
   }
 
   group('Authentication screen.', () {
     testWidgets(
         'If there is a previous connection it should navigate directly to home screen.',
         (WidgetTester tester) async {
+      listenStub();
       bool isNavigatedToHomeScreen = false;
 
       final TestObserver observer = TestObserver()
@@ -99,9 +105,17 @@ void main() {
     });
 
     testWidgets(
-        'If there is no previous connection, there should be a login selection.',
+        'If there is no previous connection, there should be a login selection $connectWalletOptions.',
         (WidgetTester tester) async {
       listenStub();
+      whenListen(
+        mockAuthCubit,
+        Stream<AuthState>.fromIterable(
+          <AuthState>[
+            InitializeWeb3AuthSuccess(),
+          ],
+        ),
+      );
 
       await pumpWidget(tester);
       await tester.pumpAndSettle();
@@ -112,11 +126,34 @@ void main() {
     });
     testWidgets('Connect options should be clickable.',
         (WidgetTester tester) async {
+      const MethodChannel channel = MethodChannel('launch_vpn');
+
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        /// On app is installed return true to launch metamask
+        if (methodCall.method == 'isAppInstalled') {
+          return true;
+        }
+      });
       bool isTriggerLoginWithMetamask = false;
-      listenStub();
+      bool isTriggerLoginWithGoogle = false;
+
+      whenListen(
+        mockAuthCubit,
+        Stream<AuthState>.fromIterable(
+          <AuthState>[
+            InitializeWeb3AuthSuccess(),
+          ],
+        ),
+      );
+
+      when(() => mockAuthCubit.state).thenReturn(const AuthState());
+      when(() => mockAuthCubit.initializeWeb3Auth()).thenAnswer((_) async {});
 
       when(() => mockAuthCubit.loginWithMetamask())
           .thenAnswer((_) async => isTriggerLoginWithMetamask = true);
+
+      when(() => mockAuthCubit.loginWithGoogle())
+          .thenAnswer((_) async => isTriggerLoginWithGoogle = true);
 
       await pumpWidget(tester);
       await tester.pumpAndSettle();
@@ -124,10 +161,12 @@ void main() {
       for (String option in connectWalletOptions) {
         await tester.tap(find.text(option));
         await tester.pump();
-
-        expect(isTriggerLoginWithMetamask, isTrue);
-        verify(() => mockAuthCubit.loginWithMetamask()).called(1);
       }
+      expect(isTriggerLoginWithMetamask, isTrue);
+      expect(isTriggerLoginWithGoogle, isTrue);
+
+      verify(() => mockAuthCubit.loginWithMetamask()).called(1);
+      verify(() => mockAuthCubit.loginWithGoogle()).called(1);
     });
   });
 }
