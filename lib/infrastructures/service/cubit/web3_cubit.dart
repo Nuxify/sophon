@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
 import 'package:sophon/internal/ethereum_credentials.dart';
