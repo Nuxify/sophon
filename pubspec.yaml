@@ -69,6 +69,7 @@ flutter:
   assets:
     - .env
     - assets/images/metamask-logo.png
+    - assets/images/google-logo.png
     - assets/images/walletconnect-logo.png
     - lib/contracts/staging/greeter.abi.json
 
@@ -82,18 +83,18 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Raleway
+    - family: Poppins
       fonts:
-        - asset: assets/fonts/Raleway/Raleway-Regular.ttf
-        - asset: assets/fonts/Raleway/Raleway-Italic.ttf
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins/Poppins-Italic.ttf
           style: italic
-        - asset: assets/fonts/Raleway/Raleway-Light.ttf
+        - asset: assets/fonts/Poppins/Poppins-Light.ttf
           weight: 300
-        - asset: assets/fonts/Raleway/Raleway-Medium.ttf
+        - asset: assets/fonts/Poppins/Poppins-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Raleway/Raleway-Semibold.ttf
+        - asset: assets/fonts/Poppins/Poppins-Semibold.ttf
           weight: 600
-        - asset: assets/fonts/Raleway/Raleway-Bold.ttf
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
           weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

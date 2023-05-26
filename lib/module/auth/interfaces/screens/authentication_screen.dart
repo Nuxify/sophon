@@ -16,6 +16,15 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  final ButtonStyle buttonStyle = ButtonStyle(
+    alignment: Alignment.centerLeft,
+    side: MaterialStateProperty.all(const BorderSide(color: kPink)),
+    shape: MaterialStateProperty.all(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+    ),
+  );
   Future<void> _launchApp() async {
     final bool isInstalled = await LaunchApp.isAppInstalled(
       androidPackageName: metaMaskPackageName,
@@ -51,7 +60,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
 
     return BlocListener<AuthCubit, AuthState>(
       listenWhen: (AuthState previous, AuthState current) =>
@@ -91,7 +99,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         }
       },
       child: Scaffold(
-        body: DecoratedBox(
+        body: Container(
+          alignment: Alignment.center,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -99,83 +108,68 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
               colors: flirtGradient,
             ),
           ),
-          child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(30),
+            width: width * 0.75,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black12,
+                  spreadRadius: 4,
+                  blurRadius: 8,
+                ),
+              ],
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(bottom: height * 0.4),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
                     'Sophon',
-                    style: theme.textTheme.headline3,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: kPink,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                    ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.2,
-                    vertical: height * 0.05,
+                SizedBox(
+                  width: width,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _launchApp(),
+                    label: const Text('Login with MetaMask'),
+                    style: buttonStyle,
+                    icon: Image.asset(
+                      'assets/images/metamask-logo.png',
+                      width: 16,
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white24,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'Connect your Ethereum Wallet',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: ElevatedButton.icon(
-                              onPressed: () => _launchApp(),
-                              icon: Image.asset(
-                                'assets/images/metamask-logo.png',
-                                width: 16,
-                              ),
-                              label: Text('Login with Metamask',
-                                  style: theme.textTheme.subtitle1),
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor: MaterialStateProperty.all(
-                                  Colors.white.withAlpha(60),
-                                ),
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                ),
-                              ),
-                            ),
+                ),
+                BlocBuilder<AuthCubit, AuthState>(
+                  buildWhen: (AuthState previous, AuthState current) =>
+                      current is InitializeWeb3AuthSuccess,
+                  builder: (BuildContext context, AuthState state) {
+                    if (state is InitializeWeb3AuthSuccess) {
+                      return SizedBox(
+                        width: width,
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              context.read<AuthCubit>().loginWithGoogle(),
+                          label: const Text('Login with Google'),
+                          style: buttonStyle,
+                          icon: Image.asset(
+                            'assets/images/google-logo.png',
+                            width: 16,
                           ),
-                        ],
-                      ),
-                      BlocBuilder<AuthCubit, AuthState>(
-                        buildWhen: (AuthState previous, AuthState current) =>
-                            current is InitializeWeb3AuthSuccess,
-                        builder: (BuildContext context, AuthState state) {
-                          if (state is InitializeWeb3AuthSuccess) {
-                            return ElevatedButton(
-                              onPressed: () =>
-                                  context.read<AuthCubit>().loginWithGoogle(),
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0),
-                              ),
-                              child: const Text('Login via Google'),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                )
               ],
             ),
           ),

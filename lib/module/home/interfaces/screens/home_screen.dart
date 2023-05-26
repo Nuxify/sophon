@@ -126,10 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            // ignore: use_decorated_box
             flexibleSpace: Container(
               decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: flirtGradient),
+                gradient: LinearGradient(colors: <Color>[kPink2, kPink2]),
               ),
             ),
             toolbarHeight: 0,
@@ -147,17 +146,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       horizontal: width * 0.1,
                       vertical: width * 0.05,
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
                         bottom: Radius.circular(10),
                       ),
-                      gradient: const LinearGradient(colors: flirtGradient),
+                      color: kPink2,
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: const Offset(0, 13),
+                          color: Colors.black12,
+                          spreadRadius: 4,
+                          blurRadius: 8,
                         ),
                       ],
                     ),
@@ -231,19 +229,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           right: width * 0.03,
                           bottom: height * 0.03,
                         ),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: flirtGradient),
-                          borderRadius: const BorderRadius.vertical(
+                        decoration: const BoxDecoration(
+                          color: kPink2,
+                          borderRadius: BorderRadius.vertical(
                             bottom: Radius.circular(10),
                             top: Radius.circular(10),
                           ),
                           boxShadow: <BoxShadow>[
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                  0, 13), // changes position of shadow
+                              color: Colors.black12,
+                              spreadRadius: 4,
+                              blurRadius: 8,
                             ),
                           ],
                         ),
@@ -294,21 +290,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           vertical: height * 0.03,
                         ),
                         margin: EdgeInsets.symmetric(horizontal: width * 0.03),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: flirtGradient),
-                          borderRadius: const BorderRadius.vertical(
+                        decoration: const BoxDecoration(
+                          color: kPink2,
+                          borderRadius: BorderRadius.vertical(
                             bottom: Radius.circular(10),
                             top: Radius.circular(10),
                           ),
                           boxShadow: <BoxShadow>[
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                0,
-                                13,
-                              ), // changes position of shadow
+                              color: Colors.black12,
+                              spreadRadius: 4,
+                              blurRadius: 8,
                             ),
                           ],
                         ),
@@ -371,17 +363,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10),
                       ),
-                      gradient: const LinearGradient(colors: flirtGradient),
+                      color: kPink2,
                       boxShadow: <BoxShadow>[
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: const Offset(0, 3),
+                          color: Colors.black12,
+                          spreadRadius: 4,
+                          blurRadius: 8,
                         ),
                       ],
                     ),
