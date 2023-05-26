@@ -97,66 +97,59 @@ class Web3Cubit extends Cubit<Web3State> {
     }
   }
 
-  /// Update greeter contract with provided [text] via MetaMask
-  Future<void> updateGreetingViaMetaMask(String text) async {
+  /// Update greeter contract with provided [text]
+  /// [type] the authentication type currently used
+  Future<void> updateGreeting({
+    required LoginType type,
+    required String text,
+  }) async {
     emit(UpdateGreetingLoading());
     try {
-      String txnHash = await web3Client.sendTransaction(
-        wcCredentials,
-        Transaction.callContract(
-          contract: greeterContract,
-          function: greeterContract.function(setGreetingFunction),
-          from: EthereumAddress.fromHex(sender),
-          parameters: <String>[text],
-        ),
-        chainId: sessionStatus!.chainId,
-      );
-
-      late Timer txnTimer;
-      txnTimer = Timer.periodic(
-          Duration(milliseconds: getBlockTime(sessionStatus!.chainId)),
-          (_) async {
-        TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
-        if (t != null) {
-          emit(const UpdateGreetingSuccess());
-          fetchGreeting();
-          txnTimer.cancel();
-        }
-      });
+      if (type == LoginType.metaMask) {
+        sendTransaction(
+          credentials: wcCredentials,
+          text: text,
+          chainId: sessionStatus!.chainId,
+        );
+      } else if (type == LoginType.google) {
+        final BigInt cId = await web3Client.getChainId();
+        final int chainId = cId.toInt();
+        sendTransaction(
+          credentials: privCredentials!,
+          text: text,
+          chainId: chainId,
+        );
+      }
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
   }
 
-  /// Update greeter contract with provided [text] via Google
-  Future<void> updateGreetingViaGoogle(String text) async {
-    emit(UpdateGreetingLoading());
-    try {
-      final BigInt cId = await web3Client.getChainId();
-      final int chainId = cId.toInt();
-      String txnHash = await web3Client.sendTransaction(
-        privCredentials!,
-        Transaction.callContract(
-          contract: greeterContract,
-          function: greeterContract.function(setGreetingFunction),
-          from: EthereumAddress.fromHex(sender),
-          parameters: <String>[text],
-        ),
-        chainId: chainId,
-      );
-      late Timer txnTimer;
-      txnTimer = Timer.periodic(Duration(milliseconds: getBlockTime(chainId)),
-          (_) async {
-        TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
-        if (t != null) {
-          emit(const UpdateGreetingSuccess());
-          fetchGreeting();
-          txnTimer.cancel();
-        }
-      });
-    } catch (e) {
-      emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
-    }
+  Future<void> sendTransaction({
+    required Credentials credentials,
+    required String text,
+    required int chainId,
+  }) async {
+    String txnHash = await web3Client.sendTransaction(
+      credentials,
+      Transaction.callContract(
+        contract: greeterContract,
+        function: greeterContract.function(setGreetingFunction),
+        from: EthereumAddress.fromHex(sender),
+        parameters: <String>[text],
+      ),
+      chainId: chainId,
+    );
+    late Timer txnTimer;
+    txnTimer = Timer.periodic(Duration(milliseconds: getBlockTime(chainId)),
+        (_) async {
+      TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
+      if (t != null) {
+        emit(const UpdateGreetingSuccess());
+        fetchGreeting();
+        txnTimer.cancel();
+      }
+    });
   }
 
   /// TODO: <another> contract

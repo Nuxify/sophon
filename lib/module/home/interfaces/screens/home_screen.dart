@@ -43,20 +43,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  void updateGreetingViaMetamask() {
+  void updateGreeting(LoginType type) {
     FocusScope.of(context).unfocus();
-    launchUrlString(widget.uri!, mode: LaunchMode.externalApplication);
+    if (type == LoginType.metaMask) {
+      launchUrlString(widget.uri!, mode: LaunchMode.externalApplication);
+    }
     context
         .read<Web3Cubit>()
-        .updateGreetingViaMetaMask(greetingTextController.text);
-    greetingTextController.text = '';
-  }
-
-  void updateGreetingViaGoogle() {
-    FocusScope.of(context).unfocus();
-    context
-        .read<Web3Cubit>()
-        .updateGreetingViaGoogle(greetingTextController.text);
+        .updateGreeting(type: type, text: greetingTextController.text);
     greetingTextController.text = '';
   }
 
@@ -344,10 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   }
                                   return ElevatedButton.icon(
-                                    onPressed:
-                                        widget.loginType == LoginType.metaMask
-                                            ? updateGreetingViaMetamask
-                                            : updateGreetingViaGoogle,
+                                    onPressed: () =>
+                                        updateGreeting(widget.loginType),
                                     icon: const Icon(Icons.edit),
                                     label: const Text('Update Greeting'),
                                     style: buttonStyle,
