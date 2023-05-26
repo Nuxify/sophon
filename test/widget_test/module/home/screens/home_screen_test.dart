@@ -141,8 +141,8 @@ void main() {
             'On click edit button should trigger updateGreeting function inside cubit.',
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-          when(() => mockWeb3Cubit.updateGreetingViaMetaMask(any()))
-              .thenAnswer((_) async {});
+          when(() => mockWeb3Cubit.updateGreeting(
+              type: LoginType.metaMask, text: any())).thenAnswer((_) async {});
 
           await pumpWidget(tester);
           await tester.pump();
@@ -155,15 +155,16 @@ void main() {
           await tester.pump();
 
           verify(
-            () => mockWeb3Cubit.updateGreetingViaMetaMask(any()),
+            () => mockWeb3Cubit.updateGreeting(
+                type: LoginType.metaMask, text: any()),
           ).called(1);
         });
 
         testWidgets('On fail update it should show snackbar and related error.',
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-          when(() => mockWeb3Cubit.updateGreetingViaMetaMask(any()))
-              .thenAnswer((_) async {});
+          when(() => mockWeb3Cubit.updateGreeting(
+              type: LoginType.metaMask, text: any())).thenAnswer((_) async {});
           const String errorCode = '404';
           const String errorMessage = 'Something went wrong';
           whenListen(

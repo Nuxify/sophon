@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/internal/ethereum_credentials.dart';
+import 'package:sophon/internal/web3_utils.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -106,7 +107,7 @@ void main() {
         cubit.wcCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
-        cubit.updateGreetingViaMetaMask(updateText);
+        cubit.updateGreeting(type: LoginType.metaMask, text: updateText);
 
         cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, UpdateGreetingSuccess);
@@ -146,7 +147,7 @@ void main() {
         cubit.privCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
-        cubit.updateGreetingViaGoogle(updateText);
+        cubit.updateGreeting(type: LoginType.google, text: updateText);
 
         await Future<void>.delayed(const Duration(seconds: 1));
 
@@ -183,7 +184,7 @@ void main() {
       cubit.wcCredentials = MockWalletConnectEthereumCredentials();
       cubit.sender = MockDeployedContract.sampleHexString;
 
-      cubit.updateGreetingViaMetaMask(updateText);
+      cubit.updateGreeting(type: LoginType.metaMask, text: updateText);
 
       cubit.stream.listen((Web3State state) {
         expect(state.runtimeType, UpdateGreetingFailed);
