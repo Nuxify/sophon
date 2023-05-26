@@ -60,5 +60,7 @@
 		<array>
 			<string>metamask-blockchain-wallet</string>
 		</array>
-	</dict>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+</dict>
 </plist>
