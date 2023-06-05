@@ -105,54 +105,34 @@ class Web3Cubit extends Cubit<Web3State> {
   }) async {
     emit(UpdateGreetingLoading());
     try {
+      Credentials credentials;
+      int chainId;
+
       switch (type) {
         case LoginType.metaMask:
-          sendTransaction(
-            credentials: wcCredentials,
-            text: text,
-            chainId: sessionStatus!.chainId,
-          );
+          credentials = wcCredentials;
+          chainId = sessionStatus!.chainId;
           break;
         case LoginType.web3Auth:
           final BigInt cId = await web3Client.getChainId();
-          final int chainId = cId.toInt();
-          sendTransaction(
-            credentials: privCredentials!,
-            text: text,
-            chainId: chainId,
-          );
+          chainId = cId.toInt();
+          credentials = privCredentials!;
           break;
       }
+      await web3Client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: greeterContract,
+          function: greeterContract.function(setGreetingFunction),
+          from: EthereumAddress.fromHex(sender),
+          parameters: <String>[text],
+        ),
+        chainId: chainId,
+      );
+      emit(const UpdateGreetingSuccess());
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
-  }
-
-  Future<void> sendTransaction({
-    required Credentials credentials,
-    required String text,
-    required int chainId,
-  }) async {
-    String txnHash = await web3Client.sendTransaction(
-      credentials,
-      Transaction.callContract(
-        contract: greeterContract,
-        function: greeterContract.function(setGreetingFunction),
-        from: EthereumAddress.fromHex(sender),
-        parameters: <String>[text],
-      ),
-      chainId: chainId,
-    );
-    late Timer txnTimer;
-    txnTimer = Timer.periodic(Duration(milliseconds: getBlockTime(chainId)),
-        (_) async {
-      TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
-      if (t != null) {
-        emit(const UpdateGreetingSuccess());
-        fetchGreeting();
-        txnTimer.cancel();
-      }
-    });
   }
 
   /// TODO: <another> contract
