@@ -75,9 +75,9 @@ class AuthCubit extends Cubit<AuthState> {
         key: lsPrivateKey,
         value: response.privKey ?? '',
       );
-      emit(LoginWithGoogleSuccess());
+      emit(LoginWithWeb3AuthSuccess());
     } catch (e) {
-      emit(const LoginWithGoogleFailed(message: '', errorCode: ''));
+      emit(const LoginWithWeb3AuthFailed(message: '', errorCode: ''));
     }
   }
 

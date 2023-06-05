@@ -135,7 +135,7 @@ void main() {
         }
       });
       bool isTriggerLoginWithMetamask = false;
-      bool isTriggerLoginWithGoogle = false;
+      bool isTriggerLoginWithWeb3Auth = false;
 
       whenListen(
         mockAuthCubit,
@@ -153,7 +153,7 @@ void main() {
           .thenAnswer((_) async => isTriggerLoginWithMetamask = true);
 
       when(() => mockAuthCubit.loginWithGoogle())
-          .thenAnswer((_) async => isTriggerLoginWithGoogle = true);
+          .thenAnswer((_) async => isTriggerLoginWithWeb3Auth = true);
 
       await pumpWidget(tester);
       await tester.pumpAndSettle();
@@ -163,7 +163,7 @@ void main() {
         await tester.pump();
       }
       expect(isTriggerLoginWithMetamask, isTrue);
-      expect(isTriggerLoginWithGoogle, isTrue);
+      expect(isTriggerLoginWithWeb3Auth, isTrue);
 
       verify(() => mockAuthCubit.loginWithMetamask()).called(1);
       verify(() => mockAuthCubit.loginWithGoogle()).called(1);

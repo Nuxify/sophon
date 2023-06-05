@@ -67,7 +67,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           current is LoginWithMetamaskSuccess ||
           current is LoginWithMetamaskFailed ||
           current is InitializeWeb3AuthSuccess ||
-          current is LoginWithGoogleSuccess,
+          current is LoginWithWeb3AuthSuccess,
       listener: (BuildContext context, AuthState state) {
         if (state is EstablishConnectionSuccess) {
           Navigator.of(context).pushReplacement(
@@ -89,7 +89,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
               backgroundColor: theme.errorColor,
             ),
           );
-        } else if (state is LoginWithGoogleSuccess) {
+        } else if (state is LoginWithWeb3AuthSuccess) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute<void>(
               builder: (BuildContext context) =>

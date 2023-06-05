@@ -68,12 +68,12 @@ class InitializeWeb3AuthFailed extends AuthState {
   final String message;
 }
 
-class LoginWithGoogleLoading extends AuthState {}
+class LoginWithWeb3AuthLoading extends AuthState {}
 
-class LoginWithGoogleSuccess extends AuthState {}
+class LoginWithWeb3AuthSuccess extends AuthState {}
 
-class LoginWithGoogleFailed extends AuthState {
-  const LoginWithGoogleFailed({
+class LoginWithWeb3AuthFailed extends AuthState {
+  const LoginWithWeb3AuthFailed({
     required this.errorCode,
     required this.message,
   });

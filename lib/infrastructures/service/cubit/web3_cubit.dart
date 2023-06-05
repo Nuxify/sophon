@@ -63,7 +63,7 @@ class Web3Cubit extends Cubit<Web3State> {
         accountAddress: sender, networkName: getNetworkName(session.chainId)));
   }
 
-  /// Initialize Google provider
+  /// Initialize Web3Auth provider
   Future<void> initializeWeb3AuthProvider() async {
     final String privateKey = await storage.read(key: lsPrivateKey) ?? '';
     final BigInt cId = await web3Client.getChainId();
