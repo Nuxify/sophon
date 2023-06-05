@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
   dynamic _session;
   String walletConnectURI = '';
 
-  void initiateListeners() {
+  void initializeWalletConnectListeners() {
     if (connector.connected) {
       emit(
         EstablishConnectionSuccess(
@@ -31,8 +31,10 @@ class AuthCubit extends Cubit<AuthState> {
           uri: connector.session.toUri(),
         ),
       );
+
       return;
     }
+
     connector.on('connect', (Object? session) async {
       emit(EstablishConnectionSuccess(
           session: session, connector: connector, uri: walletConnectURI));
@@ -71,6 +73,7 @@ class AuthCubit extends Cubit<AuthState> {
           mfaLevel: MFALevel.OPTIONAL,
         ),
       );
+      // store private key on device only
       storage.write(
         key: lsPrivateKey,
         value: response.privKey ?? '',

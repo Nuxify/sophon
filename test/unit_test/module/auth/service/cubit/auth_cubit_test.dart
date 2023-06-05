@@ -55,7 +55,7 @@ void main() {
           storage: mockSecureStorageRepository,
           connector: mockWalletConnect,
         );
-        cubit.initiateListeners();
+        cubit.initializeWalletConnectListeners();
         mockWalletConnect.approveSession(accounts: accounts, chainId: chainId);
 
         cubit.stream.listen((AuthState state) {
@@ -74,7 +74,7 @@ void main() {
           storage: mockSecureStorageRepository,
           connector: mockWalletConnect,
         );
-        cubit.initiateListeners();
+        cubit.initializeWalletConnectListeners();
         mockWalletConnect.rejectSession();
 
         cubit.stream.listen((AuthState state) {

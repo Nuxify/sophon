@@ -107,7 +107,8 @@ void main() {
         cubit.wcCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
-        cubit.updateGreeting(type: LoginType.metaMask, text: updateText);
+        cubit.updateGreeting(
+            provider: WalletProvider.metaMask, text: updateText);
 
         cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, UpdateGreetingSuccess);
@@ -147,7 +148,8 @@ void main() {
         cubit.privCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
-        cubit.updateGreeting(type: LoginType.web3Auth, text: updateText);
+        cubit.updateGreeting(
+            provider: WalletProvider.web3Auth, text: updateText);
 
         await Future<void>.delayed(const Duration(seconds: 1));
 
@@ -184,7 +186,7 @@ void main() {
       cubit.wcCredentials = MockWalletConnectEthereumCredentials();
       cubit.sender = MockDeployedContract.sampleHexString;
 
-      cubit.updateGreeting(type: LoginType.metaMask, text: updateText);
+      cubit.updateGreeting(provider: WalletProvider.metaMask, text: updateText);
 
       cubit.stream.listen((Web3State state) {
         expect(state.runtimeType, UpdateGreetingFailed);

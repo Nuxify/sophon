@@ -28,17 +28,14 @@ class Web3Cubit extends Cubit<Web3State> {
   late WalletConnectEthereumCredentials wcCredentials;
   late Credentials? privCredentials;
 
-  // contract-specific declarations
-  late Timer fetchGreetingTimer;
-
   /// Terminates metamask, provider, contract connections
-  void closeConnection(LoginType loginType) {
-    fetchGreetingTimer.cancel();
-    if (loginType == LoginType.metaMask) {
+  Future<void> closeConnection(WalletProvider provider) async {
+    if (provider == WalletProvider.metaMask) {
       walletConnector?.killSession();
       walletConnector?.close();
-    } else if (loginType == LoginType.web3Auth) {
+    } else if (provider == WalletProvider.web3Auth) {
       web3Client.dispose();
+      await storage.delete(key: lsPrivateKey); // delete private key from device
     }
 
     emit(SessionTerminated());
@@ -55,10 +52,6 @@ class Web3Cubit extends Cubit<Web3State> {
     provider = EthereumWalletConnectProvider(connector);
     wcCredentials = WalletConnectEthereumCredentials(provider: provider);
 
-    /// periodically fetch greeting from chain
-    fetchGreetingTimer =
-        Timer.periodic(const Duration(seconds: 5), (_) => fetchGreeting());
-
     emit(InitializeMetaMaskProviderSuccess(
         accountAddress: sender, networkName: getNetworkName(session.chainId)));
   }
@@ -72,10 +65,6 @@ class Web3Cubit extends Cubit<Web3State> {
 
     privCredentials = credentials;
     sender = address.hex;
-
-    /// periodically fetch greeting from chain
-    fetchGreetingTimer =
-        Timer.periodic(const Duration(seconds: 5), (_) => fetchGreeting());
 
     emit(InitializeWeb3AuthProviderSuccess(
         accountAddress: sender, networkName: getNetworkName(cId.toInt())));
@@ -98,9 +87,9 @@ class Web3Cubit extends Cubit<Web3State> {
   }
 
   /// Update greeter contract with provided [text]
-  /// [type] the authentication type currently used
+  /// [provider] the authentication type currently used
   Future<void> updateGreeting({
-    required LoginType type,
+    required WalletProvider provider,
     required String text,
   }) async {
     emit(UpdateGreetingLoading());
@@ -108,17 +97,18 @@ class Web3Cubit extends Cubit<Web3State> {
       Credentials credentials;
       int chainId;
 
-      switch (type) {
-        case LoginType.metaMask:
+      switch (provider) {
+        case WalletProvider.metaMask:
           credentials = wcCredentials;
           chainId = sessionStatus!.chainId;
           break;
-        case LoginType.web3Auth:
+        case WalletProvider.web3Auth:
           final BigInt cId = await web3Client.getChainId();
           chainId = cId.toInt();
           credentials = privCredentials!;
           break;
       }
+
       await web3Client.sendTransaction(
         credentials,
         Transaction.callContract(

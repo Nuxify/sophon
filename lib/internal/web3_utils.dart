@@ -1,17 +1,5 @@
-/// Get block time by [chainId]
-/// Returned time is in milliseconds (ms)
-int getBlockTime(int chainId) {
-  // TODO: specify more blocktime based from chains
-  switch (chainId) {
-    default:
-      // for ethereum and related networks, default blocktime is 12 seconds
-      return 12000;
-  }
-}
-
 /// Get network name by [chainId]
 String getNetworkName(int chainId) {
-  // TODO: you can specify more chains
   switch (chainId) {
     case 1:
       return 'Ethereum Mainnet';
@@ -30,7 +18,7 @@ String getNetworkName(int chainId) {
   }
 }
 
-enum LoginType {
+enum WalletProvider {
   metaMask,
   web3Auth,
 }

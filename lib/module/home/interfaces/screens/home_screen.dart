@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
@@ -7,12 +6,11 @@ import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:sophon/configs/themes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
-    required this.loginType,
+    required this.provider,
     this.session,
     this.uri,
     this.connector,
@@ -22,7 +20,7 @@ class HomeScreen extends StatefulWidget {
   final dynamic session;
   final WalletConnect? connector;
   final String? uri;
-  final LoginType loginType;
+  final WalletProvider provider;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -43,14 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  void updateGreeting(LoginType type) {
+  void updateGreeting(WalletProvider provider) {
     FocusScope.of(context).unfocus();
-    if (type == LoginType.metaMask) {
+    if (provider == WalletProvider.metaMask) {
       launchUrlString(widget.uri!, mode: LaunchMode.externalApplication);
     }
     context
         .read<Web3Cubit>()
-        .updateGreeting(type: type, text: greetingTextController.text);
+        .updateGreeting(provider: provider, text: greetingTextController.text);
     greetingTextController.text = '';
   }
 
@@ -58,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    if (widget.loginType == LoginType.metaMask) {
+    if (widget.provider == WalletProvider.metaMask) {
       /// Execute after frame is rendered to get the emit state of InitializeMetaMaskProviderSuccess
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => context.read<Web3Cubit>().initializeMetaMaskProvider(
@@ -66,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               session: widget.session,
             ),
       );
-    } else if (widget.loginType == LoginType.web3Auth) {
+    } else if (widget.provider == WalletProvider.web3Auth) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => context.read<Web3Cubit>().initializeWeb3AuthProvider(),
       );
@@ -339,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                   return ElevatedButton.icon(
                                     onPressed: () =>
-                                        updateGreeting(widget.loginType),
+                                        updateGreeting(widget.provider),
                                     icon: const Icon(Icons.edit),
                                     label: const Text('Update Greeting'),
                                     style: buttonStyle,
@@ -376,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ElevatedButton.icon(
                             onPressed: () => context
                                 .read<Web3Cubit>()
-                                .closeConnection(widget.loginType),
+                                .closeConnection(widget.provider),
                             icon: const Icon(
                               Icons.power_settings_new,
                             ),

@@ -32,7 +32,7 @@ void main() {
                 chainId: 1,
               ),
               uri: '',
-              loginType: LoginType.metaMask,
+              provider: WalletProvider.metaMask,
             ),
           ),
         ),
@@ -142,7 +142,8 @@ void main() {
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
           when(() => mockWeb3Cubit.updateGreeting(
-              type: LoginType.metaMask, text: any())).thenAnswer((_) async {});
+              provider: WalletProvider.metaMask,
+              text: any())).thenAnswer((_) async {});
 
           await pumpWidget(tester);
           await tester.pump();
@@ -156,7 +157,7 @@ void main() {
 
           verify(
             () => mockWeb3Cubit.updateGreeting(
-                type: LoginType.metaMask, text: any()),
+                provider: WalletProvider.metaMask, text: any()),
           ).called(1);
         });
 
@@ -164,7 +165,8 @@ void main() {
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
           when(() => mockWeb3Cubit.updateGreeting(
-              type: LoginType.metaMask, text: any())).thenAnswer((_) async {});
+              provider: WalletProvider.metaMask,
+              text: any())).thenAnswer((_) async {});
           const String errorCode = '404';
           const String errorMessage = 'Something went wrong';
           whenListen(
@@ -192,7 +194,7 @@ void main() {
           'On click disconnect button should trigger closeConnection function.',
           (WidgetTester tester) async {
         when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-        when(() => mockWeb3Cubit.closeConnection(LoginType.metaMask))
+        when(() => mockWeb3Cubit.closeConnection(WalletProvider.metaMask))
             .thenAnswer((_) async {});
 
         await pumpWidget(tester);
@@ -206,7 +208,7 @@ void main() {
         await tester.pump();
 
         verify(
-          () => mockWeb3Cubit.closeConnection(LoginType.metaMask),
+          () => mockWeb3Cubit.closeConnection(WalletProvider.metaMask),
         ).called(1);
       });
     });
