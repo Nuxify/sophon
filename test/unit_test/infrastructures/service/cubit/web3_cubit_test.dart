@@ -147,7 +147,7 @@ void main() {
         cubit.privCredentials = MockWalletConnectEthereumCredentials();
         cubit.sender = MockDeployedContract.sampleHexString;
 
-        cubit.updateGreeting(type: LoginType.google, text: updateText);
+        cubit.updateGreeting(type: LoginType.web3Auth, text: updateText);
 
         await Future<void>.delayed(const Duration(seconds: 1));
 

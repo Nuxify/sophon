@@ -43,7 +43,7 @@ String getNetworkName(int chainId) {
 
 enum LoginType {
   metaMask,
-  google,
+  web3Auth,
 }
 
 Uint8List bigIntToBytes(BigInt value, int length) {

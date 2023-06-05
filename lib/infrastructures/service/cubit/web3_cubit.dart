@@ -37,7 +37,7 @@ class Web3Cubit extends Cubit<Web3State> {
     if (loginType == LoginType.metaMask) {
       walletConnector?.killSession();
       walletConnector?.close();
-    } else if (loginType == LoginType.google) {
+    } else if (loginType == LoginType.web3Auth) {
       web3Client.dispose();
     }
 
@@ -111,7 +111,7 @@ class Web3Cubit extends Cubit<Web3State> {
           text: text,
           chainId: sessionStatus!.chainId,
         );
-      } else if (type == LoginType.google) {
+      } else if (type == LoginType.web3Auth) {
         final BigInt cId = await web3Client.getChainId();
         final int chainId = cId.toInt();
         sendTransaction(

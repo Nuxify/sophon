@@ -93,7 +93,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute<void>(
               builder: (BuildContext context) =>
-                  const HomeScreen(loginType: LoginType.google),
+                  const HomeScreen(loginType: LoginType.web3Auth),
             ),
           );
         }

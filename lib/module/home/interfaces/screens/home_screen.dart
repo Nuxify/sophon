@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               session: widget.session,
             ),
       );
-    } else if (widget.loginType == LoginType.google) {
+    } else if (widget.loginType == LoginType.web3Auth) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => context.read<Web3Cubit>().initializeGoogleProvider(),
       );
