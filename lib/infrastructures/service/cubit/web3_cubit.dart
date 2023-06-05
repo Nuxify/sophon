@@ -105,20 +105,23 @@ class Web3Cubit extends Cubit<Web3State> {
   }) async {
     emit(UpdateGreetingLoading());
     try {
-      if (type == LoginType.metaMask) {
-        sendTransaction(
-          credentials: wcCredentials,
-          text: text,
-          chainId: sessionStatus!.chainId,
-        );
-      } else if (type == LoginType.web3Auth) {
-        final BigInt cId = await web3Client.getChainId();
-        final int chainId = cId.toInt();
-        sendTransaction(
-          credentials: privCredentials!,
-          text: text,
-          chainId: chainId,
-        );
+      switch (type) {
+        case LoginType.metaMask:
+          sendTransaction(
+            credentials: wcCredentials,
+            text: text,
+            chainId: sessionStatus!.chainId,
+          );
+          break;
+        case LoginType.web3Auth:
+          final BigInt cId = await web3Client.getChainId();
+          final int chainId = cId.toInt();
+          sendTransaction(
+            credentials: privCredentials!,
+            text: text,
+            chainId: chainId,
+          );
+          break;
       }
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
