@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
 import 'package:sophon/internal/local_storage.dart';
-import 'package:sophon/internal/string_constants.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3auth_flutter/enums.dart';
 import 'package:web3auth_flutter/input.dart';
@@ -87,9 +85,11 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       Uri redirectUrl;
       if (Platform.isAndroid) {
-        redirectUrl = Uri.parse('$appUrlScheme://$appBundleId/auth');
+        redirectUrl = Uri.parse(
+            '${dotenv.get('WEB3AUTH_APP_URL_SCHEME')}://${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}/auth');
       } else if (Platform.isIOS) {
-        redirectUrl = Uri.parse('$appBundleId://openlogin');
+        redirectUrl =
+            Uri.parse('${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}://openlogin');
       } else {
         throw UnKnownException('Unknown platform');
       }
