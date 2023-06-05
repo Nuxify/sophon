@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } else if (widget.loginType == LoginType.web3Auth) {
       WidgetsBinding.instance.addPostFrameCallback(
-        (_) => context.read<Web3Cubit>().initializeGoogleProvider(),
+        (_) => context.read<Web3Cubit>().initializeWeb3AuthProvider(),
       );
     }
   }
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
             accountAddress = state.accountAddress;
             networkName = state.networkName;
           });
-        } else if (state is InitializeGoogleProviderSuccess) {
+        } else if (state is InitializeWeb3AuthProviderSuccess) {
           setState(() {
             accountAddress = state.accountAddress;
             networkName = state.networkName;

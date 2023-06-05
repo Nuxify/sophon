@@ -74,10 +74,10 @@ class UpdateGreetingFailed extends Web3State {
   final String message;
 }
 
-class InitializeGoogleProviderLoading extends Web3State {}
+class InitializeWeb3AuthProviderLoading extends Web3State {}
 
-class InitializeGoogleProviderSuccess extends Web3State {
-  const InitializeGoogleProviderSuccess({
+class InitializeWeb3AuthProviderSuccess extends Web3State {
+  const InitializeWeb3AuthProviderSuccess({
     required this.accountAddress,
     required this.networkName,
   });
@@ -86,8 +86,8 @@ class InitializeGoogleProviderSuccess extends Web3State {
   final String networkName;
 }
 
-class InitializeGoogleProviderFailed extends Web3State {
-  const InitializeGoogleProviderFailed({
+class InitializeWeb3AuthProviderFailed extends Web3State {
+  const InitializeWeb3AuthProviderFailed({
     required this.errorCode,
     required this.message,
   });

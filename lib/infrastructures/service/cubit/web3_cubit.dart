@@ -64,7 +64,7 @@ class Web3Cubit extends Cubit<Web3State> {
   }
 
   /// Initialize Google provider
-  Future<void> initializeGoogleProvider() async {
+  Future<void> initializeWeb3AuthProvider() async {
     final String privateKey = await storage.read(key: lsPrivateKey) ?? '';
     final BigInt cId = await web3Client.getChainId();
     final EthPrivateKey credentials = EthPrivateKey.fromHex(privateKey);
@@ -77,7 +77,7 @@ class Web3Cubit extends Cubit<Web3State> {
     fetchGreetingTimer =
         Timer.periodic(const Duration(seconds: 5), (_) => fetchGreeting());
 
-    emit(InitializeGoogleProviderSuccess(
+    emit(InitializeWeb3AuthProviderSuccess(
         accountAddress: sender, networkName: getNetworkName(cId.toInt())));
   }
 
