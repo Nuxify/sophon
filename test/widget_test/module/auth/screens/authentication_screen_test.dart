@@ -29,8 +29,8 @@ void main() {
   late MockWeb3Cubit mockWeb3Cubit;
 
   final List<String> connectWalletOptions = <String>[
-    'Login with Metamask',
-    'Login via Google',
+    'Login with MetaMask',
+    'Login with Google',
   ];
 
   setUp(() {
@@ -66,6 +66,9 @@ void main() {
     when(() => mockSecureStorageCubit.read(key: any(named: 'key')))
         .thenAnswer((_) async => '');
     when(() => mockAuthCubit.initializeWeb3Auth()).thenAnswer((_) async {});
+    when(() => mockWeb3Cubit.fetchGreeting()).thenAnswer((_) async {});
+    when(() => mockAuthCubit.initializeWalletConnectListeners())
+        .thenAnswer((_) async {});
   }
 
   group('Authentication screen.', () {

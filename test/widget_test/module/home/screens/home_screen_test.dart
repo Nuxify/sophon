@@ -19,6 +19,7 @@ void main() {
   setUp(() {
     mockWeb3Cubit = MockWeb3Cubit();
     mockWalletConnect = MockWalletConnect();
+    when(() => mockWeb3Cubit.fetchGreeting()).thenAnswer((_) async {});
   });
 
   Future<void> pumpWidget(WidgetTester tester) async => tester.pumpWidget(
@@ -143,7 +144,7 @@ void main() {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
           when(() => mockWeb3Cubit.updateGreeting(
               provider: WalletProvider.metaMask,
-              text: any())).thenAnswer((_) async {});
+              text: any(named: 'text'))).thenAnswer((_) async {});
 
           await pumpWidget(tester);
           await tester.pump();
@@ -157,7 +158,7 @@ void main() {
 
           verify(
             () => mockWeb3Cubit.updateGreeting(
-                provider: WalletProvider.metaMask, text: any()),
+                provider: WalletProvider.metaMask, text: any(named: 'text')),
           ).called(1);
         });
 
@@ -166,7 +167,7 @@ void main() {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
           when(() => mockWeb3Cubit.updateGreeting(
               provider: WalletProvider.metaMask,
-              text: any())).thenAnswer((_) async {});
+              text: any(named: 'text'))).thenAnswer((_) async {});
           const String errorCode = '404';
           const String errorMessage = 'Something went wrong';
           whenListen(
