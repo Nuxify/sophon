@@ -53,3 +53,31 @@ class LoginWithMetamaskFailed extends AuthState {
   final String errorCode;
   final String message;
 }
+
+class InitializeWeb3AuthLoading extends AuthState {}
+
+class InitializeWeb3AuthSuccess extends AuthState {}
+
+class InitializeWeb3AuthFailed extends AuthState {
+  const InitializeWeb3AuthFailed({
+    required this.errorCode,
+    required this.message,
+  });
+
+  final String errorCode;
+  final String message;
+}
+
+class LoginWithWeb3AuthLoading extends AuthState {}
+
+class LoginWithWeb3AuthSuccess extends AuthState {}
+
+class LoginWithWeb3AuthFailed extends AuthState {
+  const LoginWithWeb3AuthFailed({
+    required this.errorCode,
+    required this.message,
+  });
+
+  final String errorCode;
+  final String message;
+}

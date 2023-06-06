@@ -1,3 +1,8 @@
+enum WalletProvider {
+  metaMask,
+  web3Auth,
+}
+
 /// Get block time by [chainId]
 /// Returned time is in milliseconds (ms)
 int getBlockTime(int chainId) {
@@ -11,7 +16,6 @@ int getBlockTime(int chainId) {
 
 /// Get network name by [chainId]
 String getNetworkName(int chainId) {
-  // TODO: you can specify more chains
   switch (chainId) {
     case 1:
       return 'Ethereum Mainnet';
