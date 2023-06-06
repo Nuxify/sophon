@@ -93,6 +93,7 @@ class Web3Cubit extends Cubit<Web3State> {
     required String text,
   }) async {
     emit(UpdateGreetingLoading());
+
     try {
       Credentials credentials;
       int chainId;
@@ -109,7 +110,8 @@ class Web3Cubit extends Cubit<Web3State> {
           break;
       }
 
-      await web3Client.sendTransaction(
+      // send transaction
+      String txnHash = await web3Client.sendTransaction(
         credentials,
         Transaction.callContract(
           contract: greeterContract,
@@ -119,7 +121,18 @@ class Web3Cubit extends Cubit<Web3State> {
         ),
         chainId: chainId,
       );
-      emit(const UpdateGreetingSuccess());
+
+      // wait for confirmation and block to be mined
+      late Timer txnTimer;
+      txnTimer = Timer.periodic(Duration(milliseconds: getBlockTime(chainId)),
+          (_) async {
+        TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
+        if (t != null) {
+          txnTimer.cancel();
+          fetchGreeting();
+          emit(const UpdateGreetingSuccess());
+        }
+      });
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
