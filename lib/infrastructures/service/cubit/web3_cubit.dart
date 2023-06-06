@@ -134,6 +134,7 @@ class Web3Cubit extends Cubit<Web3State> {
         }
       });
     } catch (e) {
+      fetchGreeting();
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
   }
