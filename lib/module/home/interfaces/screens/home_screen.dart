@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
@@ -180,6 +181,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: theme.textTheme.subtitle2,
                                   ),
                                 ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: accountAddress),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Copied address to clipboard'),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(Icons.copy),
                               ),
                             ],
                           ),
