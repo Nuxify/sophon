@@ -34,6 +34,28 @@ class SessionTerminated extends Web3State {
   SessionTerminated();
 }
 
+class InitializeWeb3AuthProviderLoading extends Web3State {}
+
+class InitializeWeb3AuthProviderSuccess extends Web3State {
+  const InitializeWeb3AuthProviderSuccess({
+    required this.accountAddress,
+    required this.networkName,
+  });
+
+  final String accountAddress;
+  final String networkName;
+}
+
+class InitializeWeb3AuthProviderFailed extends Web3State {
+  const InitializeWeb3AuthProviderFailed({
+    required this.errorCode,
+    required this.message,
+  });
+
+  final String errorCode;
+  final String message;
+}
+
 /// Greeter contract
 /// Contains Greeter contract related events
 
@@ -66,28 +88,6 @@ class UpdateGreetingSuccess extends Web3State {
 
 class UpdateGreetingFailed extends Web3State {
   const UpdateGreetingFailed({
-    required this.errorCode,
-    required this.message,
-  });
-
-  final String errorCode;
-  final String message;
-}
-
-class InitializeWeb3AuthProviderLoading extends Web3State {}
-
-class InitializeWeb3AuthProviderSuccess extends Web3State {
-  const InitializeWeb3AuthProviderSuccess({
-    required this.accountAddress,
-    required this.networkName,
-  });
-
-  final String accountAddress;
-  final String networkName;
-}
-
-class InitializeWeb3AuthProviderFailed extends Web3State {
-  const InitializeWeb3AuthProviderFailed({
     required this.errorCode,
     required this.message,
   });

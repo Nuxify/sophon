@@ -19,14 +19,16 @@ class Web3Cubit extends Cubit<Web3State> {
 
   // core declarations
   final Web3Client web3Client;
-  final DeployedContract greeterContract;
   final ISecureStorageRepository storage;
-  late String sender;
   late SessionStatus? sessionStatus;
   late EthereumWalletConnectProvider provider;
   late WalletConnect? walletConnector;
   late WalletConnectEthereumCredentials wcCredentials;
   late Credentials? privCredentials;
+  late String sender;
+
+  // contract-related
+  final DeployedContract greeterContract;
 
   /// Terminates metamask, provider, contract connections
   Future<void> closeConnection(WalletProvider provider) async {
