@@ -47,6 +47,31 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
+  Future<void> initializeWeb3Auth() async {
+    try {
+      Uri redirectUrl;
+      if (Platform.isAndroid) {
+        redirectUrl = Uri.parse(
+            '${dotenv.get('WEB3AUTH_APP_URL_SCHEME')}://${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}/auth');
+      } else if (Platform.isIOS) {
+        redirectUrl =
+            Uri.parse('${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}://openlogin');
+      } else {
+        throw UnKnownException('Unknown platform');
+      }
+      await Web3AuthFlutter.init(
+        Web3AuthOptions(
+          clientId: dotenv.get('WEB3AUTH_CLIENT_ID'),
+          network: Network.testnet,
+          redirectUrl: redirectUrl,
+        ),
+      );
+      emit(InitializeWeb3AuthSuccess());
+    } catch (e) {
+      emit(InitializeWeb3AuthFailed(errorCode: '', message: e.toString()));
+    }
+  }
+
   Future<void> loginWithMetamask() async {
     if (!connector.bridgeConnected) {
       connector.reconnect();
@@ -81,31 +106,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(LoginWithWeb3AuthSuccess());
     } catch (e) {
       emit(const LoginWithWeb3AuthFailed(message: '', errorCode: ''));
-    }
-  }
-
-  Future<void> initializeWeb3Auth() async {
-    try {
-      Uri redirectUrl;
-      if (Platform.isAndroid) {
-        redirectUrl = Uri.parse(
-            '${dotenv.get('WEB3AUTH_APP_URL_SCHEME')}://${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}/auth');
-      } else if (Platform.isIOS) {
-        redirectUrl =
-            Uri.parse('${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}://openlogin');
-      } else {
-        throw UnKnownException('Unknown platform');
-      }
-      await Web3AuthFlutter.init(
-        Web3AuthOptions(
-          clientId: dotenv.get('WEB3AUTH_CLIENT_ID'),
-          network: Network.testnet,
-          redirectUrl: redirectUrl,
-        ),
-      );
-      emit(InitializeWeb3AuthSuccess());
-    } catch (e) {
-      emit(InitializeWeb3AuthFailed(errorCode: '', message: e.toString()));
     }
   }
 }
