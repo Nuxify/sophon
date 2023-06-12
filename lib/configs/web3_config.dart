@@ -46,7 +46,7 @@ Future<DeployedContract> get deployedGreeterContract async {
 /// Return web3client object.
 Web3Client get web3Client {
   return Web3Client(
-    dotenv.get('ETHEREUM_RPC'), // Goerli RPC URL
+    dotenv.get('ETHEREUM_RPC'),
     http.Client(),
   );
 }

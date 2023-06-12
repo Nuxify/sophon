@@ -2,7 +2,7 @@ import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/configs/themes.dart';
-import 'package:sophon/internal/wallet_external_configuration.dart';
+import 'package:sophon/configs/metamask_config.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
@@ -28,7 +28,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   Future<void> _launchApp() async {
     final bool isInstalled = await LaunchApp.isAppInstalled(
       androidPackageName: metaMaskPackageName,
-      iosUrlScheme: metamaskWalletScheme,
+      iosUrlScheme: metaMaskWalletScheme,
     );
 
     /// If there is an exisitng app, just launch the app.
@@ -41,8 +41,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     /// If there is no exisitng app, launch app store.
     await LaunchApp.openApp(
       androidPackageName: metaMaskPackageName,
-      iosUrlScheme: metamaskWalletScheme,
-      appStoreLink: metamaskAppsStoreLink,
+      iosUrlScheme: metaMaskWalletScheme,
+      appStoreLink: metaMaskAppsStoreLink,
     );
   }
 
