@@ -35,7 +35,9 @@ All these steps are assuming you're using VS Code as your editor.
 
 3. Run the command ``make`` on the Terminal. This will automatically run a sequence of commands such as ```make install``` that are necessary for running the project.
 
-4. Voila! The project should now be running on your designated simulator/device.
+4. Create a `.env` file in the root of the folder, copy the contents of `.env.example` and fill it with the corresponding data. Greeter contract address can be found at the top of this README file. 
+
+5. Voila! The project should now be running on your designated simulator/device.
 
 To use Flutter debug tools, go to Run -> Start Debugging in VS Code.
 
