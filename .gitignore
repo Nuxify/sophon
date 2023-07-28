@@ -47,3 +47,4 @@ app.*.map.json
 
 # Generated JSON Serializable files
 *.g.dart
+._*
