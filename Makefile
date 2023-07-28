@@ -5,46 +5,46 @@ default: run
 
 .PHONY:	install
 install:
-	flutter pub get
+	fvm flutter pub get
 
 .PHONY:	analyze
 analyze:
-	flutter analyze
+	fvm flutter analyze
 
 .PHONY:	lint-dry-run
 lint-dry-run:
-	dart fix --dry-run
+	fvm dart fix --dry-run
 	
 .PHONY:	lint-fix
 lint-fix:
-	dart fix --apply
+	fvm dart fix --apply
 
 .PHONY:	test
 test:
-	flutter test
+	fvm flutter test
 
 .PHONY:	test-unit
 test-unit:
-	flutter test test/unit
+	fvm flutter test test/unit
 
 .PHONY:	test-widget
 test-widget:
-	flutter test test/widget
+	fvm flutter test test/widget
 
 .PHONY:	clean
 clean:
-	flutter clean
+	fvm flutter clean
 
 .PHONY:	run
 run:
-	flutter run
+	fvm flutter run
 
 .PHONY:	compile
 compile:
-	flutter clean
-	flutter pub get
-	flutter pub run build_runner build --delete-conflicting-outputs
+	fvm flutter clean
+	fvm flutter pub get
+	fvm flutter pub run build_runner build --delete-conflicting-outputs
 
 .PHONY:	build-json
 build-json:
-	flutter pub run build_runner build --delete-conflicting-outputs
+	fvm flutter pub run build_runner build --delete-conflicting-outputs
