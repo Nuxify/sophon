@@ -1,35 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:sophon/gen/fonts.gen.dart';
 
 const Color kPink = Color(0xFFfe6796);
 const Color kPink2 = Color(0xFFfe8cb3);
 
-ThemeData buildDefaultTheme(BuildContext context) {
-  final ThemeData base = ThemeData.dark();
+final ThemeData defaultTheme = _buildDefaultTheme();
 
-  return base.copyWith(
-    textTheme: _buildDefaultTextTheme(base.textTheme),
+ThemeData _buildDefaultTheme() {
+  final ThemeData base = ThemeData.light();
+  return ThemeData(
+    fontFamily: FontFamily.poppins,
     primaryColor: kPink,
     colorScheme: base.colorScheme.copyWith(
-      primary: kPink,
+      secondary: const Color(0xFF004e92),
     ),
-  );
-}
-
-TextTheme _buildDefaultTextTheme(TextTheme base) {
-  return base.copyWith(
-    headline6: base.headline6?.copyWith(fontFamily: 'Poppins'),
-    headline5: base.headline5?.copyWith(fontFamily: 'Poppins'),
-    headline4: base.headline4?.copyWith(fontFamily: 'Poppins'),
-    headline3: base.headline3?.copyWith(fontFamily: 'Poppins'),
-    headline2: base.headline2?.copyWith(fontFamily: 'Poppins'),
-    headline1: base.headline1?.copyWith(fontFamily: 'Poppins'),
-    subtitle2: base.subtitle2?.copyWith(fontFamily: 'Poppins'),
-    subtitle1: base.subtitle1?.copyWith(fontFamily: 'Poppins'),
-    bodyText2: base.bodyText2?.copyWith(fontFamily: 'Poppins'),
-    bodyText1: base.bodyText1?.copyWith(fontFamily: 'Poppins'),
-    caption: base.caption?.copyWith(fontFamily: 'Poppins'),
-    button: base.button?.copyWith(fontFamily: 'Poppins'),
-    overline: base.overline?.copyWith(fontFamily: 'Poppins'),
   );
 }
 

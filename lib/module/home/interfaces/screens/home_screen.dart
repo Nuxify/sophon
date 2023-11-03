@@ -1,13 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sophon/internal/web3_utils.dart';
-import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
-import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/configs/themes.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
+import 'package:sophon/internal/web3_utils.dart';
+import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -15,8 +16,8 @@ class HomeScreen extends StatefulWidget {
     this.session,
     this.uri,
     this.connector,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final dynamic session;
   final WalletConnect? connector;
@@ -62,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => context.read<Web3Cubit>().initializeMetaMaskProvider(
               connector: widget.connector!,
-              session: widget.session,
+              session: widget.session as SessionStatus,
             ),
       );
     } else if (widget.provider == WalletProvider.web3Auth) {
@@ -169,16 +170,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: <Widget>[
                               Text(
                                 'Account Address: ',
-                                style: theme.textTheme.subtitle2,
+                                style: theme.textTheme.titleSmall,
                               ),
                               Expanded(
-                                flex: 1,
                                 child: SizedBox(
                                   width: width * 0.6,
                                   child: Text(
                                     accountAddress,
                                     overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.subtitle2,
+                                    style: theme.textTheme.titleSmall,
                                   ),
                                 ),
                               ),
@@ -212,11 +212,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: <Widget>[
                               Text(
                                 'Chain: ',
-                                style: theme.textTheme.subtitle2,
+                                style: theme.textTheme.titleSmall,
                               ),
                               Text(
                                 networkName,
-                                style: theme.textTheme.subtitle2,
+                                style: theme.textTheme.titleSmall,
                               ),
                             ],
                           ),
@@ -273,16 +273,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   width: width,
                                   child: BlocBuilder<Web3Cubit, Web3State>(
-                                    buildWhen: (Web3State previous,
-                                            Web3State current) =>
+                                    buildWhen: (
+                                      Web3State previous,
+                                      Web3State current,
+                                    ) =>
                                         current is FetchGreetingSuccess ||
                                         current is UpdateGreetingLoading,
-                                    builder: (BuildContext context,
-                                        Web3State state) {
+                                    builder: (
+                                      BuildContext context,
+                                      Web3State state,
+                                    ) {
                                       if (state is FetchGreetingSuccess) {
                                         return Text(
                                           '"${state.message}"',
-                                          style: theme.textTheme.headline6
+                                          style: theme.textTheme.titleLarge
                                               ?.copyWith(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w400,
@@ -331,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderSide:
                                           const BorderSide(color: Colors.white),
                                     ),
-                                    hintText: 'What\'s in your head?',
+                                    hintText: "What's in your head?",
                                     fillColor: Colors.white.withAlpha(60),
                                     filled: true,
                                   ),
@@ -339,13 +343,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(
                                   width: width,
                                   child: BlocBuilder<Web3Cubit, Web3State>(
-                                    buildWhen: (Web3State previous,
-                                            Web3State current) =>
+                                    buildWhen: (
+                                      Web3State previous,
+                                      Web3State current,
+                                    ) =>
                                         current is UpdateGreetingLoading ||
                                         current is UpdateGreetingSuccess ||
                                         current is UpdateGreetingFailed,
-                                    builder: (BuildContext context,
-                                        Web3State state) {
+                                    builder: (
+                                      BuildContext context,
+                                      Web3State state,
+                                    ) {
                                       if (state is UpdateGreetingLoading) {
                                         return ElevatedButton.icon(
                                           onPressed: () {},
@@ -380,7 +388,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
+                      vertical: 10,
+                      horizontal: 10,
+                    ),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10),
@@ -406,8 +416,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: const Icon(
                               Icons.power_settings_new,
                             ),
-                            label: Text('Disconnect',
-                                style: theme.textTheme.subtitle1),
+                            label: Text(
+                              'Disconnect',
+                              style: theme.textTheme.titleMedium,
+                            ),
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(0),
                               backgroundColor: MaterialStateProperty.all(
@@ -415,7 +427,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25)),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
                               ),
                             ),
                           ),

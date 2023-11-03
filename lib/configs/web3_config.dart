@@ -1,15 +1,15 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:sophon/internal/walletconnect_session_storage.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
-import 'package:http/http.dart' as http;
 
 /// Return a wallet connect object with a session storage, to persist the wallet session.
 Future<WalletConnect> get walletConnect async {
   final WalletConnectSecureStorage sessionStorage =
       WalletConnectSecureStorage();
-  WalletConnectSession? session = await sessionStorage.getSession();
+  final WalletConnectSession? session = await sessionStorage.getSession();
 
   final WalletConnect walletConnect = WalletConnect(
     session: session,
@@ -33,7 +33,7 @@ Future<WalletConnect> get walletConnect async {
 Future<DeployedContract> get deployedGreeterContract async {
   const String abiDirectory = 'lib/contracts/staging/greeter.abi.json';
   final String contractAddress = dotenv.get('GREETER_CONTRACT_ADDRESS');
-  String contractABI = await rootBundle.loadString(abiDirectory);
+  final String contractABI = await rootBundle.loadString(abiDirectory);
 
   final DeployedContract contract = DeployedContract(
     ContractAbi.fromJson(contractABI, 'Greeter'),

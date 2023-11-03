@@ -16,7 +16,8 @@ class WalletConnectSecureStorage implements SessionStorage {
     }
 
     try {
-      final Map<String, dynamic> data = jsonDecode(json);
+      final Map<String, dynamic> data =
+          jsonDecode(json) as Map<String, dynamic>;
       return WalletConnectSession.fromJson(data);
     } on FormatException {
       return null;

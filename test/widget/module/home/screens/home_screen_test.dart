@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
-import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class MockWeb3Cubit extends MockCubit<Web3State> implements Web3Cubit {}
@@ -142,9 +142,12 @@ void main() {
             'On click edit button should trigger updateGreeting function inside cubit.',
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-          when(() => mockWeb3Cubit.updateGreeting(
+          when(
+            () => mockWeb3Cubit.updateGreeting(
               provider: WalletProvider.metaMask,
-              text: any(named: 'text'))).thenAnswer((_) async {});
+              text: any(named: 'text'),
+            ),
+          ).thenAnswer((_) async {});
 
           await pumpWidget(tester);
           await tester.pump();
@@ -158,16 +161,21 @@ void main() {
 
           verify(
             () => mockWeb3Cubit.updateGreeting(
-                provider: WalletProvider.metaMask, text: any(named: 'text')),
+              provider: WalletProvider.metaMask,
+              text: any(named: 'text'),
+            ),
           ).called(1);
         });
 
         testWidgets('On fail update it should show snackbar and related error.',
             (WidgetTester tester) async {
           when(() => mockWeb3Cubit.state).thenReturn(const Web3State());
-          when(() => mockWeb3Cubit.updateGreeting(
+          when(
+            () => mockWeb3Cubit.updateGreeting(
               provider: WalletProvider.metaMask,
-              text: any(named: 'text'))).thenAnswer((_) async {});
+              text: any(named: 'text'),
+            ),
+          ).thenAnswer((_) async {});
           const String errorCode = '404';
           const String errorMessage = 'Something went wrong';
           whenListen(
@@ -175,7 +183,9 @@ void main() {
             Stream<Web3State>.fromIterable(
               <Web3State>[
                 const FetchGreetingFailed(
-                    errorCode: errorCode, message: errorMessage),
+                  errorCode: errorCode,
+                  message: errorMessage,
+                ),
               ],
             ),
           );
@@ -185,7 +195,9 @@ void main() {
 
           expect(
             find.ancestor(
-                matching: find.byType(SnackBar), of: find.text(errorMessage)),
+              matching: find.byType(SnackBar),
+              of: find.text(errorMessage),
+            ),
             findsOneWidget,
           );
         });

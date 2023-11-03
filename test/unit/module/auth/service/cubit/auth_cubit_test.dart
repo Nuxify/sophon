@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:walletconnect_dart/src/utils/event.dart';
 import 'package:walletconnect_dart/src/utils/event_bus.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class MockSecureStorageRepository extends Mock
     implements SecureStorageRepository {}
@@ -36,8 +36,12 @@ void main() {
       test(
           'On listen to Connect. Triggers write and emits EstablishConnectionSuccess.',
           () {
-        when(() => mockWalletConnect.approveSession(
-            accounts: accounts, chainId: chainId)).thenAnswer(
+        when(
+          () => mockWalletConnect.approveSession(
+            accounts: accounts,
+            chainId: chainId,
+          ),
+        ).thenAnswer(
           (_) async => mockWalletConnect.eventBus.fire(
             Event<SessionStatus>(
               'connect',
@@ -65,9 +69,10 @@ void main() {
       test(
           'On listen to Disconnect. Triggers write and emits SessionDisconnected.',
           () {
-        when(() => mockWalletConnect.rejectSession()).thenAnswer((_) async =>
-            mockWalletConnect.eventBus
-                .fire(Event<String>('disconnect', 'Session Rejected')));
+        when(() => mockWalletConnect.rejectSession()).thenAnswer(
+          (_) async => mockWalletConnect.eventBus
+              .fire(Event<String>('disconnect', 'Session Rejected')),
+        );
         when(() => mockWalletConnect.connected).thenReturn(false);
 
         final AuthCubit cubit = AuthCubit(
@@ -88,11 +93,14 @@ void main() {
         when(() => mockWalletConnect.connected).thenReturn(false);
         when(() => mockWalletConnect.bridgeConnected).thenReturn(false);
 
-        when(() =>
-            mockWalletConnect.createSession(
-                chainId: any(named: 'chainId'),
-                onDisplayUri: any(named: 'onDisplayUri'))).thenAnswer(
-            (_) async => SessionStatus(accounts: accounts, chainId: chainId));
+        when(
+          () => mockWalletConnect.createSession(
+            chainId: any(named: 'chainId'),
+            onDisplayUri: any(named: 'onDisplayUri'),
+          ),
+        ).thenAnswer(
+          (_) async => SessionStatus(accounts: accounts, chainId: chainId),
+        );
 
         final AuthCubit cubit = AuthCubit(
           storage: mockSecureStorageRepository,
@@ -108,10 +116,12 @@ void main() {
         when(() => mockWalletConnect.connected).thenReturn(false);
         when(() => mockWalletConnect.bridgeConnected).thenReturn(false);
 
-        when(() => mockWalletConnect.createSession(
-                chainId: any(named: 'chainId'),
-                onDisplayUri: any(named: 'onDisplayUri')))
-            .thenThrow('Something went wrong.');
+        when(
+          () => mockWalletConnect.createSession(
+            chainId: any(named: 'chainId'),
+            onDisplayUri: any(named: 'onDisplayUri'),
+          ),
+        ).thenThrow('Something went wrong.');
 
         final AuthCubit cubit = AuthCubit(
           storage: mockSecureStorageRepository,

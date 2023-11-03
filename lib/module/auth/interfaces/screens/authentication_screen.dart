@@ -1,15 +1,15 @@
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/configs/themes.dart';
 import 'package:sophon/configs/metamask_config.dart';
+import 'package:sophon/configs/themes.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AuthenticationScreen extends StatefulWidget {
-  const AuthenticationScreen({Key? key}) : super(key: key);
+  const AuthenticationScreen({super.key});
 
   @override
   State<AuthenticationScreen> createState() => _AuthenticationScreenState();
@@ -29,7 +29,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     final bool isInstalled = await LaunchApp.isAppInstalled(
       androidPackageName: metaMaskPackageName,
       iosUrlScheme: metaMaskWalletScheme,
-    );
+    ) as bool;
 
     /// If there is an exisitng app, just launch the app.
     if (isInstalled) {
@@ -86,7 +86,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: theme.errorColor,
+              backgroundColor: theme.colorScheme.error,
             ),
           );
         } else if (state is LoginWithWeb3AuthSuccess) {
