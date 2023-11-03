@@ -25,8 +25,9 @@ class AuthCubit extends Cubit<AuthState> {
       emit(
         EstablishConnectionSuccess(
           session: SessionStatus(
-              accounts: connector.session.accounts,
-              chainId: connector.session.chainId),
+            accounts: connector.session.accounts,
+            chainId: connector.session.chainId,
+          ),
           connector: connector,
           uri: connector.session.toUri(),
         ),
@@ -36,8 +37,13 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     connector.on('connect', (Object? session) async {
-      emit(EstablishConnectionSuccess(
-          session: session, connector: connector, uri: walletConnectURI));
+      emit(
+        EstablishConnectionSuccess(
+          session: session,
+          connector: connector,
+          uri: walletConnectURI,
+        ),
+      );
     });
     connector.on('session_update', (Object? session) {
       _session = session;
@@ -52,7 +58,8 @@ class AuthCubit extends Cubit<AuthState> {
       Uri redirectUrl;
       if (Platform.isAndroid) {
         redirectUrl = Uri.parse(
-            '${dotenv.get('WEB3AUTH_APP_URL_SCHEME')}://${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}/auth');
+          '${dotenv.get('WEB3AUTH_APP_URL_SCHEME')}://${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}/auth',
+        );
       } else if (Platform.isIOS) {
         redirectUrl =
             Uri.parse('${dotenv.get('WEB3AUTH_APP_BUNDLE_ID')}://openlogin');
@@ -78,11 +85,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
     if (!connector.connected) {
       try {
-        SessionStatus session =
-            await connector.createSession(onDisplayUri: (String uri) async {
-          walletConnectURI = uri;
-          emit(LoginWithMetamaskSuccess(url: uri));
-        });
+        final SessionStatus session = await connector.createSession(
+          onDisplayUri: (String uri) async {
+            walletConnectURI = uri;
+            emit(LoginWithMetamaskSuccess(url: uri));
+          },
+        );
         _session = session;
       } catch (e) {
         emit(LoginWithMetamaskFailed(errorCode: '', message: e.toString()));

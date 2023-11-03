@@ -68,7 +68,9 @@ void main() {
       cubit.initializeMetaMaskProvider(
         connector: mockWalletConnect,
         session: SessionStatus(
-            accounts: MockWalletConnect.accounts, chainId: chainId),
+          accounts: MockWalletConnect.accounts,
+          chainId: chainId,
+        ),
       );
 
       cubit.stream.listen((Web3State state) {
@@ -82,19 +84,26 @@ void main() {
       test(
           'On success, it should trigger sendTransaction, and trigger getTransactionReceipt and emits UpdateGreetingSuccess.',
           () async {
-        when(() => mockWeb3Client.sendTransaction(any(), any(),
+        when(
+          () => mockWeb3Client.sendTransaction(
+            any(),
+            any(),
             chainId: any(named: 'chainId'),
-            fetchChainIdFromNetworkId:
-                any(named: 'fetchChainIdFromNetworkId'))).thenAnswer((_) async {
+            fetchChainIdFromNetworkId: any(named: 'fetchChainIdFromNetworkId'),
+          ),
+        ).thenAnswer((_) async {
           return '';
         });
         when(() => mockWeb3Client.getTransactionReceipt(any()))
             .thenAnswer((_) async => null);
 
-        when(() => mockWeb3Client.call(
+        when(
+          () => mockWeb3Client.call(
             contract: any(named: 'contract'),
             function: any(named: 'function'),
-            params: any(named: 'params'))).thenAnswer((_) async {
+            params: any(named: 'params'),
+          ),
+        ).thenAnswer((_) async {
           return <String>['result response'];
         });
         final Web3Cubit cubit = Web3Cubit(
@@ -108,16 +117,22 @@ void main() {
         cubit.sender = MockDeployedContract.sampleHexString;
 
         cubit.updateGreeting(
-            provider: WalletProvider.metaMask, text: updateText);
+          provider: WalletProvider.metaMask,
+          text: updateText,
+        );
 
         cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, UpdateGreetingSuccess);
         });
 
-        verify(() => mockWeb3Client.sendTransaction(any(), any(),
+        verify(
+          () => mockWeb3Client.sendTransaction(
+            any(),
+            any(),
             chainId: any(named: 'chainId'),
-            fetchChainIdFromNetworkId:
-                any(named: 'fetchChainIdFromNetworkId'))).called(1);
+            fetchChainIdFromNetworkId: any(named: 'fetchChainIdFromNetworkId'),
+          ),
+        ).called(1);
       });
     });
 
@@ -130,10 +145,14 @@ void main() {
         when(() => mockWeb3Client.getChainId())
             .thenAnswer((_) async => BigInt.from(1));
 
-        when(() => mockWeb3Client.sendTransaction(any(), any(),
+        when(
+          () => mockWeb3Client.sendTransaction(
+            any(),
+            any(),
             chainId: any(named: 'chainId'),
-            fetchChainIdFromNetworkId:
-                any(named: 'fetchChainIdFromNetworkId'))).thenAnswer((_) async {
+            fetchChainIdFromNetworkId: any(named: 'fetchChainIdFromNetworkId'),
+          ),
+        ).thenAnswer((_) async {
           return '';
         });
         when(() => mockWeb3Client.getTransactionReceipt(any()))
@@ -149,7 +168,9 @@ void main() {
         cubit.sender = MockDeployedContract.sampleHexString;
 
         cubit.updateGreeting(
-            provider: WalletProvider.web3Auth, text: updateText);
+          provider: WalletProvider.web3Auth,
+          text: updateText,
+        );
 
         await Future<void>.delayed(const Duration(seconds: 1));
 
@@ -157,11 +178,13 @@ void main() {
           expect(state.runtimeType, UpdateGreetingSuccess);
         });
 
-        verify(() => mockWeb3Client.sendTransaction(
-              any(),
-              any(),
-              chainId: any(named: 'chainId'),
-            )).called(1);
+        verify(
+          () => mockWeb3Client.sendTransaction(
+            any(),
+            any(),
+            chainId: any(named: 'chainId'),
+          ),
+        ).called(1);
       });
     });
 
@@ -170,11 +193,14 @@ void main() {
         () async {
       const String updateText = 'Hello world';
 
-      when(() => mockWeb3Client.sendTransaction(any(), any(),
-              chainId: any(named: 'chainId'),
-              fetchChainIdFromNetworkId:
-                  any(named: 'fetchChainIdFromNetworkId')))
-          .thenThrow('Something went wrong');
+      when(
+        () => mockWeb3Client.sendTransaction(
+          any(),
+          any(),
+          chainId: any(named: 'chainId'),
+          fetchChainIdFromNetworkId: any(named: 'fetchChainIdFromNetworkId'),
+        ),
+      ).thenThrow('Something went wrong');
 
       final Web3Cubit cubit = Web3Cubit(
         greeterContract: await _deployedContract,
@@ -192,20 +218,27 @@ void main() {
         expect(state.runtimeType, UpdateGreetingFailed);
       });
 
-      verify(() => mockWeb3Client.sendTransaction(any(), any(),
+      verify(
+        () => mockWeb3Client.sendTransaction(
+          any(),
+          any(),
           chainId: any(named: 'chainId'),
-          fetchChainIdFromNetworkId:
-              any(named: 'fetchChainIdFromNetworkId'))).called(1);
+          fetchChainIdFromNetworkId: any(named: 'fetchChainIdFromNetworkId'),
+        ),
+      ).called(1);
     });
 
     group('Fetch greetings.', () {
       test(
           'On success. It should trigger call function from web3client and emits FetchGreetingSuccess.',
           () async {
-        when(() => mockWeb3Client.call(
+        when(
+          () => mockWeb3Client.call(
             contract: any(named: 'contract'),
             function: any(named: 'function'),
-            params: any(named: 'params'))).thenAnswer((_) async {
+            params: any(named: 'params'),
+          ),
+        ).thenAnswer((_) async {
           return <String>['result response'];
         });
         final Web3Cubit cubit = Web3Cubit(
@@ -219,19 +252,25 @@ void main() {
         cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, FetchGreetingSuccess);
         });
-        verify(() => mockWeb3Client.call(
+        verify(
+          () => mockWeb3Client.call(
             contract: any(named: 'contract'),
             function: any(named: 'function'),
-            params: any(named: 'params'))).called(1);
+            params: any(named: 'params'),
+          ),
+        ).called(1);
       });
 
       test(
           'On fail. It should trigger call function from web3client and emits FetchGreetingFailed.',
           () async {
-        when(() => mockWeb3Client.call(
+        when(
+          () => mockWeb3Client.call(
             contract: any(named: 'contract'),
             function: any(named: 'function'),
-            params: any(named: 'params'))).thenThrow('Something went wrong.');
+            params: any(named: 'params'),
+          ),
+        ).thenThrow('Something went wrong.');
 
         final Web3Cubit cubit = Web3Cubit(
           greeterContract: await _deployedContract,
@@ -244,10 +283,13 @@ void main() {
         cubit.stream.listen((Web3State state) {
           expect(state.runtimeType, FetchGreetingFailed);
         });
-        verify(() => mockWeb3Client.call(
+        verify(
+          () => mockWeb3Client.call(
             contract: any(named: 'contract'),
             function: any(named: 'function'),
-            params: any(named: 'params'))).called(1);
+            params: any(named: 'params'),
+          ),
+        ).called(1);
       });
     });
   });
@@ -259,7 +301,7 @@ Future<DeployedContract> get _deployedContract async {
 
   final String contractAddress = dotenv.get('GREETER_CONTRACT_ADDRESS');
 
-  String contractABI = await rootBundle.loadString(abiDirectory);
+  final String contractABI = await rootBundle.loadString(abiDirectory);
 
   final DeployedContract contract = DeployedContract(
     ContractAbi.fromJson(contractABI, 'Greeter'),

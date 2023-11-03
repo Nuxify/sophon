@@ -6,9 +6,9 @@ import 'package:sophon/configs/themes.dart';
 import 'package:sophon/configs/web3_config.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/infrastructures/service/cubit/secure_storage_cubit.dart';
+import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
-import 'package:sophon/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
     required this.walletConnect,
     required this.greeterContract,
     required this.web3client,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final WalletConnect walletConnect;
   final DeployedContract greeterContract;
   final Web3Client web3client;
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Sophon',
         debugShowCheckedModeBanner: false,
-        theme: buildDefaultTheme(context),
+        theme: defaultTheme,
         home: const MyHomePage(),
       ),
     );
@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

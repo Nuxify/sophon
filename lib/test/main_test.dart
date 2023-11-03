@@ -19,7 +19,7 @@ Widget universalPumper(Widget child, {NavigatorObserver? observer}) {
       return MaterialApp(
         scaffoldMessengerKey: snackbarKey,
         home: child,
-        theme: buildDefaultTheme(context),
+        theme: defaultTheme,
         navigatorObservers: observer != null
             ? <NavigatorObserver>[observer]
             : <NavigatorObserver>[],

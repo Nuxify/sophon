@@ -54,8 +54,12 @@ class Web3Cubit extends Cubit<Web3State> {
     provider = EthereumWalletConnectProvider(connector);
     wcCredentials = WalletConnectEthereumCredentials(provider: provider);
 
-    emit(InitializeMetaMaskProviderSuccess(
-        accountAddress: sender, networkName: getNetworkName(session.chainId)));
+    emit(
+      InitializeMetaMaskProviderSuccess(
+        accountAddress: sender,
+        networkName: getNetworkName(session.chainId),
+      ),
+    );
   }
 
   /// Initialize Web3Auth provider
@@ -68,8 +72,12 @@ class Web3Cubit extends Cubit<Web3State> {
     privCredentials = credentials;
     sender = address.hex;
 
-    emit(InitializeWeb3AuthProviderSuccess(
-        accountAddress: sender, networkName: getNetworkName(cId.toInt())));
+    emit(
+      InitializeWeb3AuthProviderSuccess(
+        accountAddress: sender,
+        networkName: getNetworkName(cId.toInt()),
+      ),
+    );
   }
 
   /// Greeter contract
@@ -77,12 +85,12 @@ class Web3Cubit extends Cubit<Web3State> {
   /// Get greeting from
   Future<void> fetchGreeting() async {
     try {
-      List<dynamic> response = await web3Client.call(
+      final List<dynamic> response = await web3Client.call(
         contract: greeterContract,
         function: greeterContract.function(greetFunction),
         params: <dynamic>[],
       );
-      emit(FetchGreetingSuccess(message: response[0]));
+      emit(FetchGreetingSuccess(message: response[0].toString()));
     } catch (e) {
       emit(FetchGreetingFailed(errorCode: '', message: e.toString()));
     }
@@ -113,7 +121,7 @@ class Web3Cubit extends Cubit<Web3State> {
       }
 
       // send transaction
-      String txnHash = await web3Client.sendTransaction(
+      final String txnHash = await web3Client.sendTransaction(
         credentials,
         Transaction.callContract(
           contract: greeterContract,
@@ -128,7 +136,8 @@ class Web3Cubit extends Cubit<Web3State> {
       late Timer txnTimer;
       txnTimer = Timer.periodic(Duration(milliseconds: getBlockTime(chainId)),
           (_) async {
-        TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
+        final TransactionReceipt? t =
+            await web3Client.getTransactionReceipt(txnHash);
         if (t != null) {
           txnTimer.cancel();
           fetchGreeting();
