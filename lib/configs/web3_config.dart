@@ -21,7 +21,7 @@ Future<WalletConnect> get walletConnect async {
           'A Flutter template for building amazing decentralized applications.',
       url: 'https://github.com/Nuxify/Sophon',
       icons: <String>[
-        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png'
+        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png',
       ],
     ),
   );

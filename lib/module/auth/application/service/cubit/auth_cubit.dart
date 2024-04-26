@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
+import 'package:sophon/domain/repository/secure_storage_repository.dart';
 import 'package:sophon/internal/local_storage.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3auth_flutter/enums.dart';
