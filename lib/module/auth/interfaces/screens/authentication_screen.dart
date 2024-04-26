@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/configs/metamask_config.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/internal/web3_utils.dart';
-import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
+import 'package:sophon/module/auth/application/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -169,7 +169,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                     }
                     return const SizedBox.shrink();
                   },
-                )
+                ),
               ],
             ),
           ),

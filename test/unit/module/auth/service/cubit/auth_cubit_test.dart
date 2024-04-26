@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
-import 'package:sophon/module/auth/service/cubit/auth_cubit.dart';
+import 'package:sophon/module/auth/application/service/cubit/auth_cubit.dart';
 import 'package:walletconnect_dart/src/utils/event.dart';
 import 'package:walletconnect_dart/src/utils/event_bus.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';

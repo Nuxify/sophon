@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
+import 'package:sophon/domain/repository/secure_storage_repository.dart';
 
 class SecureStorageRepository implements ISecureStorageRepository {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();

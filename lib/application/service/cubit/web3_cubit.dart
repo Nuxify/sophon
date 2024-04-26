@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/infrastructures/repository/interfaces/secure_storage_repository.dart';
+import 'package:sophon/domain/repository/secure_storage_repository.dart';
 import 'package:sophon/internal/ethereum_credentials.dart';
 import 'package:sophon/internal/local_storage.dart';
 import 'package:sophon/internal/web3_contract.dart';
@@ -112,12 +112,11 @@ class Web3Cubit extends Cubit<Web3State> {
         case WalletProvider.metaMask:
           credentials = wcCredentials;
           chainId = sessionStatus!.chainId;
-          break;
+
         case WalletProvider.web3Auth:
           final BigInt cId = await web3Client.getChainId();
           chainId = cId.toInt();
           credentials = privCredentials!;
-          break;
       }
 
       // send transaction
