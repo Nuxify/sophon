@@ -101,13 +101,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       child: Scaffold(
         body: Container(
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: flirtGradient,
-            ),
-          ),
           child: Container(
             padding: const EdgeInsets.all(30),
             width: width * 0.75,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/application/service/cubit/web3_cubit.dart';
-import 'package:sophon/configs/themes.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -120,11 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: <Color>[kPink2, kPink2]),
-              ),
-            ),
             toolbarHeight: 0,
             automaticallyImplyLeading: false,
           ),
@@ -144,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.vertical(
                         bottom: Radius.circular(10),
                       ),
-                      color: kPink2,
                       boxShadow: <BoxShadow>[
                         BoxShadow(
                           color: Colors.black12,
@@ -246,7 +239,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               top: height * 0.2,
                             ),
                             decoration: const BoxDecoration(
-                              color: kPink2,
                               borderRadius: BorderRadius.vertical(
                                 bottom: Radius.circular(10),
                                 top: Radius.circular(10),
@@ -312,7 +304,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             margin:
                                 EdgeInsets.symmetric(horizontal: width * 0.03),
                             decoration: const BoxDecoration(
-                              color: kPink2,
                               borderRadius: BorderRadius.vertical(
                                 bottom: Radius.circular(10),
                                 top: Radius.circular(10),
@@ -395,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10),
                       ),
-                      color: kPink2,
                       boxShadow: <BoxShadow>[
                         BoxShadow(
                           color: Colors.black12,

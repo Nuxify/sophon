@@ -38,16 +38,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SecureStorageRepository secureStorageRepository =
-        SecureStorageRepository();
-
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
         BlocProvider<Web3Cubit>(
           create: (BuildContext context) => Web3Cubit(
             web3Client: web3client,
             greeterContract: greeterContract,
-            storage: secureStorageRepository,
+            storage: SecureStorageRepository(),
           ),
         ),
         BlocProvider<AuthCubit>(

@@ -1,13 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nuxify.sophon">
-   <application
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
         android:label="sophon"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
-        android:allowBackup="false"
-        android:fullBackupContent="false"
-        >
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -29,8 +24,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <!-- <data android:scheme="wc:" /> -->
-
             </intent-filter>
 
             <intent-filter>
@@ -41,11 +34,6 @@
 
                 <data android:scheme="sophon" android:host="com.nuxify.sophon" android:path="/auth" />
             </intent-filter>
-
-            <intent-filter>
-                <category android:name="android.intent.category.HOME"/> 
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -53,7 +41,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
+    
     <queries>
         <package android:name="io.metamask" /> 
     </queries>
