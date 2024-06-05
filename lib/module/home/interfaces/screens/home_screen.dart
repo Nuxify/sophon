@@ -7,19 +7,19 @@ import 'package:sophon/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/internal/web3_utils.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
+// import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     required this.provider,
     this.session,
     this.uri,
-    this.connector,
+    // this.connector,
     super.key,
   });
 
   final dynamic session;
-  final WalletConnect? connector;
+  // final WalletConnect? connector;
   final String? uri;
   final WalletProvider provider;
 
@@ -47,9 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (provider == WalletProvider.metaMask) {
       launchUrlString(widget.uri!, mode: LaunchMode.externalApplication);
     }
-    context
-        .read<Web3Cubit>()
-        .updateGreeting(provider: provider, text: greetingTextController.text);
+    context.read<Web3Cubit>().updateGreeting(text: greetingTextController.text);
     greetingTextController.text = '';
   }
 
@@ -59,12 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<Web3Cubit>().fetchGreeting();
     if (widget.provider == WalletProvider.metaMask) {
       /// Execute after frame is rendered to get the emit state of InitializeMetaMaskProviderSuccess
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => context.read<Web3Cubit>().initializeMetaMaskProvider(
-              connector: widget.connector!,
-              session: widget.session as SessionStatus,
-            ),
-      );
+      // WidgetsBinding.instance.addPostFrameCallback(
+      //   (_) => context.read<Web3Cubit>().initializeMetaMaskProvider(
+      //         connector: widget.connector!,
+      //         session: widget.session as SessionStatus,
+      //       ),
+      // );
     } else if (widget.provider == WalletProvider.web3Auth) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => context.read<Web3Cubit>().initializeWeb3AuthProvider(),

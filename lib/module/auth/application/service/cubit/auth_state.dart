@@ -11,12 +11,12 @@ class EstablishConnectionLoading extends AuthState {
 class EstablishConnectionSuccess extends AuthState {
   const EstablishConnectionSuccess({
     required this.session,
-    required this.connector,
+    // required this.connector,
     required this.uri,
   });
 
   final dynamic session;
-  final WalletConnect connector;
+  // final WalletConnect connector;
   final String uri;
 }
 

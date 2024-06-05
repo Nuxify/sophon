@@ -44,9 +44,9 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>metamask-blockchain-wallet</string>
-		</array>
+	<array>
+		<string>metamask</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>

@@ -74,7 +74,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             MaterialPageRoute<void>(
               builder: (BuildContext context) => HomeScreen(
                 session: state.session,
-                connector: state.connector,
+                // connector: state.connector,
                 uri: state.uri,
                 provider: WalletProvider.metaMask,
               ),
@@ -99,6 +99,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Container(
           alignment: Alignment.center,
           child: Container(

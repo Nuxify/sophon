@@ -1,33 +1,32 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:sophon/internal/walletconnect_session_storage.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
+// import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
 /// Return a wallet connect object with a session storage, to persist the wallet session.
-Future<WalletConnect> get walletConnect async {
-  final WalletConnectSecureStorage sessionStorage =
-      WalletConnectSecureStorage();
-  final WalletConnectSession? session = await sessionStorage.getSession();
+// Future<WalletConnect> get walletConnect async {
+//   final WalletConnectSecureStorage sessionStorage =
+//       WalletConnectSecureStorage();
+//   final WalletConnectSession? session = await sessionStorage.getSession();
 
-  final WalletConnect walletConnect = WalletConnect(
-    session: session,
-    sessionStorage: sessionStorage,
-    bridge: 'https://bridge.walletconnect.org',
-    clientMeta: const PeerMeta(
-      name: 'Sophon',
-      description:
-          'A Flutter template for building amazing decentralized applications.',
-      url: 'https://github.com/Nuxify/Sophon',
-      icons: <String>[
-        'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png',
-      ],
-    ),
-  );
+//   final WalletConnect walletConnect = WalletConnect(
+//     session: session,
+//     sessionStorage: sessionStorage,
+//     bridge: 'https://bridge.walletconnect.org',
+//     clientMeta: const PeerMeta(
+//       name: 'Sophon',
+//       description:
+//           'A Flutter template for building amazing decentralized applications.',
+//       url: 'https://github.com/Nuxify/Sophon',
+//       icons: <String>[
+//         'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png',
+//       ],
+//     ),
+//   );
 
-  return walletConnect;
-}
+//   return walletConnect;
+// }
 
 /// Get deployed greeter contract
 Future<DeployedContract> get deployedGreeterContract async {

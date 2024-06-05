@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/application/service/cubit/secure_storage_cubit.dart';
@@ -9,7 +8,8 @@ import 'package:sophon/configs/web3_config.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/module/auth/application/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
+import 'package:sophon/module/home/interfaces/screens/test.dart';
+// import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
 Future<void> main() async {
@@ -18,7 +18,7 @@ Future<void> main() async {
 
   runApp(
     MyApp(
-      walletConnect: await walletConnect,
+      // walletConnect: await walletConnect,
       greeterContract: await deployedGreeterContract,
       web3client: web3Client,
     ),
@@ -27,12 +27,12 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({
-    required this.walletConnect,
+    // required this.walletConnect,
     required this.greeterContract,
     required this.web3client,
     super.key,
   });
-  final WalletConnect walletConnect;
+  // final WalletConnect walletConnect;
   final DeployedContract greeterContract;
   final Web3Client web3client;
 
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthCubit>(
           create: (BuildContext context) => AuthCubit(
             storage: SecureStorageRepository(),
-            connector: walletConnect,
+            // connector: walletConnect,
           ),
         ),
         BlocProvider<SecureStorageCubit>(
@@ -79,10 +79,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    return const AuthenticationScreen();
+    return const TestScreen();
   }
 }

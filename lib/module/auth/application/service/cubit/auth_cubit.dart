@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/domain/repository/secure_storage_repository.dart';
 import 'package:sophon/internal/local_storage.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
+// import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3auth_flutter/enums.dart';
 import 'package:web3auth_flutter/input.dart';
 import 'package:web3auth_flutter/output.dart';
@@ -12,45 +12,47 @@ import 'package:web3auth_flutter/web3auth_flutter.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit({required this.storage, required this.connector})
-      : super(const AuthState());
+  AuthCubit({
+    required this.storage,
+    // required this.connector,
+  }) : super(const AuthState());
   final ISecureStorageRepository storage;
-  final WalletConnect connector;
+  // final WalletConnect connector;
   // ignore: unused_field
   dynamic _session;
   String walletConnectURI = '';
 
   void initializeWalletConnectListeners() {
-    if (connector.connected) {
-      emit(
-        EstablishConnectionSuccess(
-          session: SessionStatus(
-            accounts: connector.session.accounts,
-            chainId: connector.session.chainId,
-          ),
-          connector: connector,
-          uri: connector.session.toUri(),
-        ),
-      );
+    // if (connector.connected) {
+    //   emit(
+    //     EstablishConnectionSuccess(
+    //       session: SessionStatus(
+    //         accounts: connector.session.accounts,
+    //         chainId: connector.session.chainId,
+    //       ),
+    //       connector: connector,
+    //       uri: connector.session.toUri(),
+    //     ),
+    //   );
 
-      return;
-    }
+    //   return;
+    // }
 
-    connector.on('connect', (Object? session) async {
-      emit(
-        EstablishConnectionSuccess(
-          session: session,
-          connector: connector,
-          uri: walletConnectURI,
-        ),
-      );
-    });
-    connector.on('session_update', (Object? session) {
-      _session = session;
-    });
-    connector.on('disconnect', (_) async {
-      emit(SessionDisconnected());
-    });
+    // connector.on('connect', (Object? session) async {
+    //   emit(
+    //     EstablishConnectionSuccess(
+    //       session: session,
+    //       connector: connector,
+    //       uri: walletConnectURI,
+    //     ),
+    //   );
+    // });
+    // connector.on('session_update', (Object? session) {
+    //   _session = session;
+    // });
+    // connector.on('disconnect', (_) async {
+    //   emit(SessionDisconnected());
+    // });
   }
 
   Future<void> initializeWeb3Auth() async {
@@ -80,22 +82,22 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> loginWithMetamask() async {
-    if (!connector.bridgeConnected) {
-      connector.reconnect();
-    }
-    if (!connector.connected) {
-      try {
-        final SessionStatus session = await connector.createSession(
-          onDisplayUri: (String uri) async {
-            walletConnectURI = uri;
-            emit(LoginWithMetamaskSuccess(url: uri));
-          },
-        );
-        _session = session;
-      } catch (e) {
-        emit(LoginWithMetamaskFailed(errorCode: '', message: e.toString()));
-      }
-    }
+    // if (!connector.bridgeConnected) {
+    //   connector.reconnect();
+    // }
+    // if (!connector.connected) {
+    //   try {
+    //     final SessionStatus session = await connector.createSession(
+    //       onDisplayUri: (String uri) async {
+    //         walletConnectURI = uri;
+    //         emit(LoginWithMetamaskSuccess(url: uri));
+    //       },
+    //     );
+    //     _session = session;
+    //   } catch (e) {
+    //     emit(LoginWithMetamaskFailed(errorCode: '', message: e.toString()));
+    //   }
+    // }
   }
 
   Future<void> loginWithGoogle() async {
