@@ -37,10 +37,9 @@ flutter:
 
   assets:
     - .env
-    - assets/images/metamask-logo.png
-    - assets/images/google-logo.png
-    - assets/images/walletconnect-logo.png
     - lib/contracts/staging/greeter.abi.json
+    - assets/images/
+
 
   fonts:
     - family: Nunito

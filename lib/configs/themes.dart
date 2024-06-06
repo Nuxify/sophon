@@ -7,7 +7,11 @@ ThemeData _buildDefaultTheme() {
   return ThemeData(
     fontFamily: FontFamily.nunito,
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(seedColor: kPink),
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: kPink,
+      brightness: Brightness.dark,
+    ),
+    brightness: Brightness.dark,
   );
 }
 
