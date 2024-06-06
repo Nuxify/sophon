@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/application/service/cubit/web3_cubit.dart';
-import 'package:sophon/configs/web3_config.dart';
-import 'package:sophon/internal/web3_contract.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 class TestScreen extends StatefulWidget {
@@ -14,18 +11,8 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
-  late W3MService w3mService;
-  bool serviceIsInitialized = false;
-
   Future<void> initialize() async {
-    try {
-      context.read<Web3Cubit>().updateGreeting(text: '2024');
-      setState(() {
-        serviceIsInitialized = true;
-      });
-    } catch (e) {
-      print(e);
-    }
+    context.read<Web3Cubit>().instantiate();
   }
 
   @override
@@ -38,13 +25,40 @@ class _TestScreenState extends State<TestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
-          if (serviceIsInitialized)
-            Expanded(
-              child: Center(
-                child: W3MConnectWalletButton(service: w3mService),
-              ),
+        children: <Widget>[
+          Expanded(
+            child: BlocBuilder<Web3Cubit, Web3State>(
+              buildWhen: (Web3State previous, Web3State current) =>
+                  current is Web3MInitialized,
+              builder: (BuildContext context, Web3State state) {
+                if (state is Web3MInitialized) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        W3MConnectWalletButton(service: state.service),
+                        FilledButton(
+                          onPressed: () {
+                            context
+                                .read<Web3Cubit>()
+                                .updateGreeting(text: '2024');
+                          },
+                          child: const Text('Write'),
+                        ),
+                        FilledButton(
+                          onPressed: () {
+                            context.read<Web3Cubit>().fetchGreeting();
+                          },
+                          child: const Text('Read'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
             ),
+          ),
         ],
       ),
     );

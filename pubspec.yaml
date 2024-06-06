@@ -7,10 +7,6 @@ environment:
   sdk: '>=3.2.3 <4.0.0'
 
 dependencies:
-  convert: ^3.1.1
-  cupertino_icons: ^1.0.2
-  eth_sig_util: ^0.0.9
-  external_app_launcher: ^3.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.5
@@ -22,8 +18,6 @@ dependencies:
     git:
       url: git@github.com:Nuxify/widgetbook.git
       ref: release/1.0.0
-  pointycastle: ^3.1.1
-  url_launcher: ^6.2.3
   web3auth_flutter: ^3.0.0
   web3dart: ^2.7.1
   web3modal_flutter: ^3.2.1

@@ -4,24 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/application/service/cubit/web3_cubit.dart';
-import 'package:sophon/internal/web3_utils.dart';
-import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-// import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
-    required this.provider,
-    this.session,
-    this.uri,
-    // this.connector,
-    super.key,
-  });
-
-  final dynamic session;
-  // final WalletConnect? connector;
-  final String? uri;
-  final WalletProvider provider;
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -42,11 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  void updateGreeting(WalletProvider provider) {
-    FocusScope.of(context).unfocus();
-    if (provider == WalletProvider.metaMask) {
-      launchUrlString(widget.uri!, mode: LaunchMode.externalApplication);
-    }
+  void updateGreeting() {
     context.read<Web3Cubit>().updateGreeting(text: greetingTextController.text);
     greetingTextController.text = '';
   }
@@ -55,19 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<Web3Cubit>().fetchGreeting();
-    if (widget.provider == WalletProvider.metaMask) {
-      /// Execute after frame is rendered to get the emit state of InitializeMetaMaskProviderSuccess
-      // WidgetsBinding.instance.addPostFrameCallback(
-      //   (_) => context.read<Web3Cubit>().initializeMetaMaskProvider(
-      //         connector: widget.connector!,
-      //         session: widget.session as SessionStatus,
-      //       ),
-      // );
-    } else if (widget.provider == WalletProvider.web3Auth) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => context.read<Web3Cubit>().initializeWeb3AuthProvider(),
-      );
-    }
   }
 
   @override
@@ -78,15 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return BlocListener<Web3Cubit, Web3State>(
       listener: (BuildContext context, Web3State state) {
-        if (state is SessionTerminated) {
-          Future<void>.delayed(const Duration(seconds: 1), () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const AuthenticationScreen(),
-              ),
-            );
-          });
-        } else if (state is UpdateGreetingFailed) {
+        if (state is UpdateGreetingFailed) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
@@ -100,16 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: Colors.red,
             ),
           );
-        } else if (state is InitializeMetaMaskProviderSuccess) {
-          setState(() {
-            accountAddress = state.accountAddress;
-            networkName = state.networkName;
-          });
-        } else if (state is InitializeWeb3AuthProviderSuccess) {
-          setState(() {
-            accountAddress = state.accountAddress;
-            networkName = state.networkName;
-          });
         }
       },
       child: GestureDetector(
@@ -359,8 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       }
                                       return ElevatedButton.icon(
-                                        onPressed: () =>
-                                            updateGreeting(widget.provider),
+                                        onPressed: () => updateGreeting(),
                                         icon: const Icon(Icons.edit),
                                         label: const Text('Update Greeting'),
                                         style: buttonStyle,
@@ -373,55 +322,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10,
-                    ),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(10),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black12,
-                          spreadRadius: 4,
-                          blurRadius: 8,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          width: width,
-                          child: ElevatedButton.icon(
-                            onPressed: () => context
-                                .read<Web3Cubit>()
-                                .closeConnection(widget.provider),
-                            icon: const Icon(
-                              Icons.power_settings_new,
-                            ),
-                            label: Text(
-                              'Disconnect',
-                              style: theme.textTheme.titleMedium,
-                            ),
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(0),
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.white.withAlpha(60),
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ],
