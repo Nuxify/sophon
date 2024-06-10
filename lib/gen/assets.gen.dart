@@ -18,12 +18,19 @@ class $LibGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/ethereum.png
+  AssetGenImage get ethereum =>
+      const AssetGenImage('assets/images/ethereum.png');
+
   /// File path: assets/images/nuxify_logo.png
   AssetGenImage get nuxifyLogo =>
       const AssetGenImage('assets/images/nuxify_logo.png');
 
+  /// File path: assets/images/space.png
+  AssetGenImage get space => const AssetGenImage('assets/images/space.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [nuxifyLogo];
+  List<AssetGenImage> get values => [ethereum, nuxifyLogo, space];
 }
 
 class $LibContractsGen {

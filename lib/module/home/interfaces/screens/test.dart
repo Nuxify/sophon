@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sophon/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/configs/themes.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 class TestScreen extends StatefulWidget {
@@ -23,6 +24,8 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -36,7 +39,39 @@ class _TestScreenState extends State<TestScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        W3MConnectWalletButton(service: state.service),
+                        W3MConnectWalletButton(
+                          service: state.service,
+                          custom: FilledButton(
+                            onPressed: () {},
+                            child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                color: kPink,
+                                borderRadius: BorderRadius.circular(11),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Connect Wallet',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                         FilledButton(
                           onPressed: () {
                             context

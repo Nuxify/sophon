@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.5
   flutter_dotenv: ^5.1.0
+  flutter_fadein: ^2.0.0
   flutter_native_splash: ^2.2.9
   flutter_secure_storage: ^9.0.0
   http: ^1.1.2
@@ -18,6 +19,7 @@ dependencies:
     git:
       url: git@github.com:Nuxify/widgetbook.git
       ref: release/1.0.0
+  shimmer: ^3.0.0
   web3auth_flutter: ^3.0.0
   web3dart: ^2.7.1
   web3modal_flutter: ^3.2.1
@@ -32,6 +34,11 @@ dev_dependencies:
   lint: ^2.3.0
   mocktail: ^1.0.1
 
+
+flutter_gen:
+  integrations:
+    flutter_svg: true
+
 flutter:
   uses-material-design: true
 
@@ -42,13 +49,10 @@ flutter:
 
 
   fonts:
-    - family: Nunito
+    - family: OpenSans
       fonts:
-        - asset: assets/fonts/Nunito/Nunito-Regular.ttf
-        - asset: assets/fonts/Nunito/Nunito-Italic.ttf
-          style: italic
-        - asset: assets/fonts/Nunito/Nunito-Light.ttf
+        - asset: assets/fonts/OpenSans/OpenSans-Regular.ttf
+        - asset: assets/fonts/OpenSans/OpenSans-Light.ttf
           weight: 300
-        - asset: assets/fonts/Nunito/Nunito-LightItalic.ttf
-          weight: 300
-          style: italic
+        - asset: assets/fonts/OpenSans/OpenSans-Bold.ttf
+          weight: 800

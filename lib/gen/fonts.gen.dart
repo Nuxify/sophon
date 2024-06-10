@@ -10,6 +10,6 @@
 class FontFamily {
   FontFamily._();
 
-  /// Font family: Nunito
-  static const String nunito = 'Nunito';
+  /// Font family: OpenSans
+  static const String openSans = 'OpenSans';
 }

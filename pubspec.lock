@@ -422,6 +422,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  flutter_fadein:
+    dependency: "direct main"
+    description:
+      name: flutter_fadein
+      sha256: ab6830acf1d09087e069c363fd063a625b2ebeb5153b74fa15b1bce108c212e4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_gen_core:
     dependency: transitive
     description:
@@ -1034,7 +1042,7 @@ packages:
     source: hosted
     version: "1.0.4"
   shimmer:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shimmer
       sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"

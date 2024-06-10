@@ -7,6 +7,7 @@ import 'package:sophon/configs/themes.dart';
 import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/module/auth/application/service/cubit/auth_cubit.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
+import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 Future<void> main() async {
   /// Load env file
@@ -36,11 +37,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: MaterialApp(
-        title: 'Sophon',
-        debugShowCheckedModeBanner: false,
-        theme: defaultTheme,
-        home: const MyHomePage(),
+      child: Web3ModalTheme(
+        isDarkMode: true,
+        child: MaterialApp(
+          title: 'Sophon',
+          debugShowCheckedModeBanner: false,
+          theme: defaultTheme,
+          home: const MyHomePage(),
+        ),
       ),
     );
   }

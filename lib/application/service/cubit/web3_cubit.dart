@@ -27,6 +27,7 @@ class Web3Cubit extends Cubit<Web3State> {
   Future<void> instantiate() async {
     try {
       w3mService = W3MService(
+        enableEmail: true,
         projectId: '2684f2b98f5ae4051dce454b5862b9ff',
         metadata: const PairingMetadata(
           name: 'Sophon',
