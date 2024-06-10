@@ -46,6 +46,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>metamask</string>
+		<!-- Add other wallet schemes names here -->
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

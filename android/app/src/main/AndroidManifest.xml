@@ -43,5 +43,6 @@
     
     <queries>
         <package android:name="io.metamask" /> 
+        <!-- Add other wallet schemes names here -->
     </queries>
 </manifest>

@@ -27,10 +27,6 @@ class UpdateGreetingLoading extends Web3State {
   UpdateGreetingLoading();
 }
 
-class UpdateGreetingSuccess extends Web3State {
-  const UpdateGreetingSuccess();
-}
-
 class UpdateGreetingFailed extends Web3State {
   const UpdateGreetingFailed({
     required this.errorCode,
@@ -41,10 +37,28 @@ class UpdateGreetingFailed extends Web3State {
   final String message;
 }
 
-class Web3MInitialized extends Web3State {
-  const Web3MInitialized({required this.service});
+class InitializeWeb3MSuccess extends Web3State {
+  const InitializeWeb3MSuccess({required this.service});
 
   final W3MService service;
 }
 
-class Web3MFailed extends Web3State {}
+class InitializeWeb3MFailed extends Web3State {}
+
+class WalletConnectionLoading extends Web3State {
+  WalletConnectionLoading();
+}
+
+class WalletConnectionSuccess extends Web3State {
+  const WalletConnectionSuccess();
+}
+
+class WalletConnectionFailed extends Web3State {
+  const WalletConnectionFailed({
+    required this.errorCode,
+    required this.message,
+  });
+
+  final String errorCode;
+  final String message;
+}

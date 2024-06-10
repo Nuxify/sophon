@@ -14,13 +14,19 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> fetchGreeting() async {
     try {
-      await w3mService.requestReadContract(
+      final List<dynamic> contractData = await w3mService.requestReadContract(
         deployedContract: await deployedGreeterContract,
         functionName: greetFunction,
         rpcUrl: dotenv.get('ETHEREUM_RPC'),
       );
+      emit(FetchGreetingSuccess(message: contractData[0].toString()));
     } catch (e) {
-      emit(Web3MFailed());
+      emit(
+        const FetchGreetingFailed(
+          errorCode: '',
+          message: 'Unable to fetch contract data',
+        ),
+      );
     }
   }
 
@@ -39,14 +45,35 @@ class Web3Cubit extends Cubit<Web3State> {
           ],
         ),
         excludedWalletIds: <String>{
-          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust
-          'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa', // Coinbase Wallet
+          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
+          'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
         },
       );
       await w3mService.init();
-      emit(Web3MInitialized(service: w3mService));
+
+      emit(InitializeWeb3MSuccess(service: w3mService));
+
+      if (w3mService.isConnected) {
+        emit(const WalletConnectionSuccess());
+      } else {
+        listenToWalletConnection();
+      }
     } catch (e) {
-      emit(Web3MFailed());
+      emit(InitializeWeb3MFailed());
+    }
+  }
+
+  Future<void> listenToWalletConnection() async {
+    try {
+      w3mService.onModalConnect
+          .subscribe((_) => emit(const WalletConnectionSuccess()));
+    } catch (e) {
+      emit(
+        const WalletConnectionFailed(
+          errorCode: '',
+          message: 'Wallet Connection Failed',
+        ),
+      );
     }
   }
 
@@ -70,7 +97,7 @@ class Web3Cubit extends Cubit<Web3State> {
           rpcUrl: dotenv.get('ETHEREUM_RPC'),
           deployedContract: await deployedGreeterContract,
           functionName: setGreetingFunction,
-          parameters: <String>['Sophon'],
+          parameters: <String>[text],
           method: setGreetingFunction,
           transaction: Transaction(
             from: EthereumAddress.fromHex(sender),
@@ -80,5 +107,9 @@ class Web3Cubit extends Cubit<Web3State> {
     } catch (e) {
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
+  }
+
+  Future<void> endSession() async {
+    await w3mService.disconnect();
   }
 }
