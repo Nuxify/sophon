@@ -1,154 +1,115 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/domain/repository/secure_storage_repository.dart';
-import 'package:sophon/internal/ethereum_credentials.dart';
-import 'package:sophon/internal/local_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sophon/configs/web3_config.dart';
 import 'package:sophon/internal/web3_contract.dart';
-import 'package:sophon/internal/web3_utils.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 part 'web3_state.dart';
 
 class Web3Cubit extends Cubit<Web3State> {
-  Web3Cubit({
-    required this.web3Client,
-    required this.greeterContract,
-    required this.storage,
-  }) : super(const Web3State());
+  Web3Cubit() : super(const Web3State());
 
-  // core declarations
-  final Web3Client web3Client;
-  final ISecureStorageRepository storage;
-  late SessionStatus? sessionStatus;
-  late EthereumWalletConnectProvider provider;
-  late WalletConnect? walletConnector;
-  late WalletConnectEthereumCredentials wcCredentials;
-  late Credentials? privCredentials;
-  late String sender;
+  late W3MService w3mService;
 
-  // contract-related
-  final DeployedContract greeterContract;
-
-  /// Terminates metamask, provider, contract connections
-  Future<void> closeConnection(WalletProvider provider) async {
-    if (provider == WalletProvider.metaMask) {
-      walletConnector?.killSession();
-      walletConnector?.close();
-    } else if (provider == WalletProvider.web3Auth) {
-      web3Client.dispose();
-      await storage.delete(key: lsPrivateKey); // delete private key from device
-    }
-
-    emit(SessionTerminated());
-  }
-
-  /// Initialize MetaMask provider provided by [session] and [connector]
-  void initializeMetaMaskProvider({
-    required WalletConnect connector,
-    required SessionStatus session,
-  }) {
-    walletConnector = connector;
-    sessionStatus = session;
-    sender = connector.session.accounts[0];
-    provider = EthereumWalletConnectProvider(connector);
-    wcCredentials = WalletConnectEthereumCredentials(provider: provider);
-
-    emit(
-      InitializeMetaMaskProviderSuccess(
-        accountAddress: sender,
-        networkName: getNetworkName(session.chainId),
-      ),
-    );
-  }
-
-  /// Initialize Web3Auth provider
-  Future<void> initializeWeb3AuthProvider() async {
-    final String privateKey = await storage.read(key: lsPrivateKey) ?? '';
-    final BigInt cId = await web3Client.getChainId();
-    final EthPrivateKey credentials = EthPrivateKey.fromHex(privateKey);
-    final EthereumAddress address = credentials.address;
-
-    privCredentials = credentials;
-    sender = address.hex;
-
-    emit(
-      InitializeWeb3AuthProviderSuccess(
-        accountAddress: sender,
-        networkName: getNetworkName(cId.toInt()),
-      ),
-    );
-  }
-
-  /// Greeter contract
-
-  /// Get greeting from
   Future<void> fetchGreeting() async {
     try {
-      final List<dynamic> response = await web3Client.call(
-        contract: greeterContract,
-        function: greeterContract.function(greetFunction),
-        params: <dynamic>[],
+      final List<dynamic> contractData = await w3mService.requestReadContract(
+        deployedContract: await deployedGreeterContract,
+        functionName: greetFunction,
+        rpcUrl: dotenv.get('ETHEREUM_RPC'),
       );
-      emit(FetchGreetingSuccess(message: response[0].toString()));
+      emit(FetchGreetingSuccess(message: contractData[0].toString()));
     } catch (e) {
-      emit(FetchGreetingFailed(errorCode: '', message: e.toString()));
+      emit(
+        const FetchGreetingFailed(
+          errorCode: '',
+          message: 'Unable to fetch contract data',
+        ),
+      );
     }
   }
 
-  /// Update greeter contract with provided [text]
-  /// [provider] the authentication type currently used
+  Future<void> instantiate() async {
+    try {
+      w3mService = W3MService(
+        enableEmail: true,
+        projectId: '2684f2b98f5ae4051dce454b5862b9ff',
+        metadata: const PairingMetadata(
+          name: 'Sophon',
+          description:
+              'A Flutter template for building amazing decentralized applications.',
+          url: 'https://github.com/Nuxify/Sophon',
+          icons: <String>[
+            'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png',
+          ],
+        ),
+        excludedWalletIds: <String>{
+          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
+          'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
+        },
+      );
+      await w3mService.init();
+
+      emit(InitializeWeb3MSuccess(service: w3mService));
+
+      if (w3mService.isConnected) {
+        emit(const WalletConnectionSuccess());
+      } else {
+        listenToWalletConnection();
+      }
+    } catch (e) {
+      emit(InitializeWeb3MFailed());
+    }
+  }
+
+  Future<void> listenToWalletConnection() async {
+    try {
+      w3mService.onModalConnect
+          .subscribe((_) => emit(const WalletConnectionSuccess()));
+    } catch (e) {
+      emit(
+        const WalletConnectionFailed(
+          errorCode: '',
+          message: 'Wallet Connection Failed',
+        ),
+      );
+    }
+  }
+
   Future<void> updateGreeting({
-    required WalletProvider provider,
     required String text,
   }) async {
     emit(UpdateGreetingLoading());
 
     try {
-      Credentials credentials;
-      int chainId;
+      final List<String> accounts =
+          w3mService.session?.getAccounts() ?? <String>[];
 
-      switch (provider) {
-        case WalletProvider.metaMask:
-          credentials = wcCredentials;
-          chainId = sessionStatus!.chainId;
+      if (accounts.isNotEmpty) {
+        final String sender = accounts.first.split(':').last;
 
-        case WalletProvider.web3Auth:
-          final BigInt cId = await web3Client.getChainId();
-          chainId = cId.toInt();
-          credentials = privCredentials!;
-      }
+        w3mService.launchConnectedWallet();
 
-      // send transaction
-      final String txnHash = await web3Client.sendTransaction(
-        credentials,
-        Transaction.callContract(
-          contract: greeterContract,
-          function: greeterContract.function(setGreetingFunction),
-          from: EthereumAddress.fromHex(sender),
+        await w3mService.requestWriteContract(
+          chainId: 'eip155:${dotenv.get('ETHEREUM_CHAIN_ID')}',
+          topic: w3mService.session?.topic ?? '',
+          rpcUrl: dotenv.get('ETHEREUM_RPC'),
+          deployedContract: await deployedGreeterContract,
+          functionName: setGreetingFunction,
           parameters: <String>[text],
-        ),
-        chainId: chainId,
-      );
-
-      // wait for confirmation and block to be mined
-      late Timer txnTimer;
-      txnTimer = Timer.periodic(Duration(milliseconds: getBlockTime(chainId)),
-          (_) async {
-        final TransactionReceipt? t =
-            await web3Client.getTransactionReceipt(txnHash);
-        if (t != null) {
-          txnTimer.cancel();
-          fetchGreeting();
-          emit(const UpdateGreetingSuccess());
-        }
-      });
+          method: setGreetingFunction,
+          transaction: Transaction(
+            from: EthereumAddress.fromHex(sender),
+          ),
+        );
+      }
     } catch (e) {
-      fetchGreeting();
       emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
     }
   }
 
-  /// TODO: <another> contract
-  /// You can add and specify more contracts here
+  Future<void> endSession() async {
+    await w3mService.disconnect();
+  }
 }

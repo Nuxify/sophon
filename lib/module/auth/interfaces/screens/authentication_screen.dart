@@ -1,12 +1,13 @@
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/configs/metamask_config.dart';
+import 'package:flutter_fadein/flutter_fadein.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:sophon/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/configs/themes.dart';
-import 'package:sophon/internal/web3_utils.dart';
-import 'package:sophon/module/auth/application/service/cubit/auth_cubit.dart';
+import 'package:sophon/gen/assets.gen.dart';
+import 'package:sophon/internal/utils.dart';
 import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
@@ -16,159 +17,124 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  final ButtonStyle buttonStyle = ButtonStyle(
-    alignment: Alignment.centerLeft,
-    side: MaterialStateProperty.all(const BorderSide(color: kPink)),
-    shape: MaterialStateProperty.all(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-      ),
-    ),
-  );
-  Future<void> _launchApp() async {
-    final bool isInstalled = await LaunchApp.isAppInstalled(
-      androidPackageName: metaMaskPackageName,
-      iosUrlScheme: metaMaskWalletScheme,
-    ) as bool;
-
-    /// If there is an exisitng app, just launch the app.
-    if (isInstalled) {
-      if (!mounted) return;
-      context.read<AuthCubit>().loginWithMetamask();
-      return;
-    }
-
-    /// If there is no exisitng app, launch app store.
-    await LaunchApp.openApp(
-      androidPackageName: metaMaskPackageName,
-      iosUrlScheme: metaMaskWalletScheme,
-      appStoreLink: metaMaskAppsStoreLink,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AuthCubit>().initializeWalletConnectListeners();
-      context.read<AuthCubit>().initializeWeb3Auth();
-    });
+    context.read<Web3Cubit>().instantiate();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     final double width = MediaQuery.of(context).size.width;
 
-    return BlocListener<AuthCubit, AuthState>(
-      listenWhen: (AuthState previous, AuthState current) =>
-          current is EstablishConnectionSuccess ||
-          current is LoginWithMetamaskSuccess ||
-          current is LoginWithMetamaskFailed ||
-          current is InitializeWeb3AuthSuccess ||
-          current is LoginWithWeb3AuthSuccess,
-      listener: (BuildContext context, AuthState state) {
-        if (state is EstablishConnectionSuccess) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => HomeScreen(
-                session: state.session,
-                connector: state.connector,
-                uri: state.uri,
-                provider: WalletProvider.metaMask,
-              ),
-            ),
+    return BlocListener<Web3Cubit, Web3State>(
+      listenWhen: (Web3State previous, Web3State current) =>
+          current is WalletConnectionSuccess ||
+          current is WalletConnectionFailed,
+      listener: (BuildContext context, Web3State state) {
+        if (state is WalletConnectionSuccess) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute<dynamic>(builder: (_) => const HomeScreen()),
           );
-        } else if (state is LoginWithMetamaskSuccess) {
-          launchUrlString(state.url, mode: LaunchMode.externalApplication);
-        } else if (state is LoginWithMetamaskFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: theme.colorScheme.error,
-            ),
-          );
-        } else if (state is LoginWithWeb3AuthSuccess) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) =>
-                  const HomeScreen(provider: WalletProvider.web3Auth),
-            ),
-          );
+        } else if (state is WalletConnectionFailed) {
+          showSnackbar(context, isSuccessful: false, message: state.message);
         }
       },
       child: Scaffold(
-        body: Container(
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: flirtGradient,
-            ),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(30),
-            width: width * 0.75,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black12,
-                  spreadRadius: 4,
-                  blurRadius: 8,
-                ),
-              ],
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 25,
+              right: 25,
+              bottom: 30,
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Assets.images.space.image(width: width * 0.8),
+                      const Text(
+                        'Sophon',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
                   child: Text(
-                    'Sophon',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: kPink,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 30,
+                    'Interact with the Smart Contract by connecting your wallet',
+                    style: TextStyle(
+                      fontSize: 28,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: width,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _launchApp(),
-                    label: const Text('Login with MetaMask'),
-                    style: buttonStyle,
-                    icon: Image.asset(
-                      'assets/images/metamask-logo.png',
-                      width: 16,
-                    ),
-                  ),
-                ),
-                BlocBuilder<AuthCubit, AuthState>(
-                  buildWhen: (AuthState previous, AuthState current) =>
-                      current is InitializeWeb3AuthSuccess,
-                  builder: (BuildContext context, AuthState state) {
-                    if (state is InitializeWeb3AuthSuccess) {
-                      return SizedBox(
-                        width: width,
-                        child: OutlinedButton.icon(
-                          onPressed: () =>
-                              context.read<AuthCubit>().loginWithGoogle(),
-                          label: const Text('Login with Google'),
-                          style: buttonStyle,
-                          icon: Image.asset(
-                            'assets/images/google-logo.png',
-                            width: 16,
+                FadeIn(
+                  duration: const Duration(seconds: 2),
+                  child: BlocBuilder<Web3Cubit, Web3State>(
+                    buildWhen: (Web3State previous, Web3State current) =>
+                        current is InitializeWeb3MSuccess,
+                    builder: (BuildContext context, Web3State state) {
+                      if (state is InitializeWeb3MSuccess) {
+                        return W3MConnectWalletButton(
+                          context: context,
+                          service: state.service,
+                          custom: SizedBox(
+                            width: width,
+                            child: FilledButton(
+                              onPressed: () => state.service.openModal(context),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(kPink),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Connect Wallet',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
+                        );
+                      }
+                      return Shimmer.fromColors(
+                        baseColor: shimmerBase,
+                        highlightColor: shimmerGlow,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(11),
+                            color: Colors.white,
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          height: 45,
                         ),
                       );
-                    }
-                    return const SizedBox.shrink();
-                  },
+                    },
+                  ),
                 ),
               ],
             ),

@@ -18,21 +18,15 @@ class $LibGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/google-logo.png
-  AssetGenImage get googleLogo =>
-      const AssetGenImage('assets/images/google-logo.png');
+  /// File path: assets/images/nuxify_logo.png
+  AssetGenImage get nuxifyLogo =>
+      const AssetGenImage('assets/images/nuxify_logo.png');
 
-  /// File path: assets/images/metamask-logo.png
-  AssetGenImage get metamaskLogo =>
-      const AssetGenImage('assets/images/metamask-logo.png');
-
-  /// File path: assets/images/walletconnect-logo.png
-  AssetGenImage get walletconnectLogo =>
-      const AssetGenImage('assets/images/walletconnect-logo.png');
+  /// File path: assets/images/space.png
+  AssetGenImage get space => const AssetGenImage('assets/images/space.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [googleLogo, metamaskLogo, walletconnectLogo];
+  List<AssetGenImage> get values => [nuxifyLogo, space];
 }
 
 class $LibContractsGen {
