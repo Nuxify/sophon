@@ -57,9 +57,20 @@ flutter:
           weight: 300
         - asset: assets/fonts/OpenSans/OpenSans-Bold.ttf
           weight: 800
-          
+
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/app-launcher-icon.png"
   remove_alpha_ios: true
+  
+flutter_native_splash:
+  color: "#000000"
+  image: assets/images/logo.png
+
+  web: false
+
+  android_12:
+    color: "#000000"
+    icon_background_color: "#000000"
+    image: assets/images/logo-android12.png
