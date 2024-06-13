@@ -12,7 +12,6 @@ dependencies:
   flutter_bloc: ^8.1.5
   flutter_dotenv: ^5.1.0
   flutter_fadein: ^2.0.0
-  flutter_native_splash: ^2.2.9
   flutter_secure_storage: ^9.0.0
   http: ^1.1.2
   nuxify_widgetbook:
@@ -28,6 +27,8 @@ dev_dependencies:
   bloc_test: ^9.1.0
   build_runner: ^2.4.9
   flutter_gen_runner: ^5.4.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
   flutter_test:
     sdk: flutter
   json_serializable: ^6.8.0
@@ -56,3 +57,20 @@ flutter:
           weight: 300
         - asset: assets/fonts/OpenSans/OpenSans-Bold.ttf
           weight: 800
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app-launcher-icon.png"
+  remove_alpha_ios: true
+  
+flutter_native_splash:
+  color: "#000000"
+  image: assets/images/logo.png
+
+  web: false
+
+  android_12:
+    color: "#000000"
+    icon_background_color: "#000000"
+    image: assets/images/logo-android12.png
