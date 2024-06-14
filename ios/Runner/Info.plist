@@ -46,6 +46,7 @@
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>metamask</string>
+			<string>cbwallet</string>
 			<!-- Add other wallet schemes names here -->
 		</array>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
