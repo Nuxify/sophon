@@ -2,7 +2,7 @@
 
 Nuxify's very own template for building decentralized apps (dApps) with Flutter and Dart.
 
-Interacts with a Greeter Smart Contract found here: <https://goerli.etherscan.io/address/0x093eb7ccAfa165D8D35c6666984de510Be58cBd2>.
+Interacts with a Greeter Smart Contract found here: <https://sepolia.etherscan.io/address/0x0e10e90f67C67c2cB9DD5071674FDCfb7853a6F5>.
 Supports MetaMask and other wallet providers.
 
 Template architecture closely resembles our other Flutter template: <https://github.com/Nuxify/flirt> but this one is geared towards dApps.
