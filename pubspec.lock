@@ -788,7 +788,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "release/1.0.0"
+      ref: "v1.0.0"
       resolved-ref: "220ee8f17d04730400637115b5aa0617c443d6e3"
       url: "git@github.com:Nuxify/widgetbook.git"
     source: git
