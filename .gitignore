@@ -56,3 +56,4 @@ app.*.map.json
 ._*
 *.gen.dart
 android/app/build/
+/lib/gen
