@@ -46,7 +46,12 @@
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>metamask</string>
-			<string>cbwallet</string>
+			<string>toshi</string>
+			<string>mona</string>
+			<string>trust</string>
+			<string>zengo</string>
+			<string>exodus</string>
+			<string>blockchain</string>
 			<!-- Add other wallet schemes names here -->
 		</array>
 		<key>UIApplicationSupportsIndirectInputEvents</key>

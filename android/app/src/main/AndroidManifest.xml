@@ -44,6 +44,11 @@
     <queries>
         <package android:name="io.metamask" /> 
         <package android:name="org.toshi"/>
+        <package android:name="co.mona.android"/>
+        <package android:name="com.wallet.crypto.trustapp"/>
+        <package android:name="com.zengo.wallet"/>
+        <package android:name="exodusmovement.exodus"/>
+        <package android:name="piuk.blockchain.android"/>
         <!-- Add other wallet schemes names here -->
     </queries>
 </manifest>
