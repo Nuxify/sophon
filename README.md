@@ -3,7 +3,7 @@
 Nuxify's very own template for building decentralized apps (dApps) with Flutter and Dart.
 
 Interacts with a Greeter Smart Contract found here: <https://goerli.etherscan.io/address/0x093eb7ccAfa165D8D35c6666984de510Be58cBd2>.
-Supports MetaMask and Web3Auth (Gmail) providers.
+Supports MetaMask and other wallet providers.
 
 Template architecture closely resembles our other Flutter template: <https://github.com/Nuxify/flirt> but this one is geared towards dApps.
 
@@ -16,10 +16,6 @@ Coming soon in Apple App Store.
 ## MetaMask
 
 Download MetaMask mobile here: <https://metamask.io/download/>
-
-## Web3Auth
-
-Create a free account here: <https://dashboard.web3auth.io/>
 
 ## Flutter Version Manager (FVM)
 

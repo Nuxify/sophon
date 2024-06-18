@@ -1398,14 +1398,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
-  web3auth_flutter:
-    dependency: "direct main"
-    description:
-      name: web3auth_flutter
-      sha256: "90620502d687f10042d5d8baad12d3043e444305b9a7e1cb8e61abba9dde0fa7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.7"
   web3dart:
     dependency: "direct main"
     description:
