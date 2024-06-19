@@ -32,6 +32,7 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> instantiate() async {
     try {
+      const String url = 'https://github.com/Nuxify/Sophon';
       w3mService = W3MService(
         enableEmail: true,
         projectId: '2684f2b98f5ae4051dce454b5862b9ff',
@@ -39,14 +40,23 @@ class Web3Cubit extends Cubit<Web3State> {
           name: 'Sophon',
           description:
               'A Flutter template for building amazing decentralized applications.',
-          url: 'https://github.com/Nuxify/Sophon',
+          url: url,
           icons: <String>[
             'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png',
           ],
+          redirect: Redirect(
+            universal: url,
+            native: url,
+          ),
         ),
-        excludedWalletIds: <String>{
-          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
-          'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
+        includedWalletIds: <String>{
+          'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // metamask
+          '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // trust
+          'e9ff15be73584489ca4a66f64d32c4537711797e30b6660dbcb71ea72a42b1f4', // exodus
+          'f2436c67184f158d1beda5df53298ee84abfc367581e4505134b5bcf5f46697d', // crypto.com
+          'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa', // coinbase
+          '9414d5a85c8f4eabc1b5b15ebe0cd399e1a2a9d35643ab0ad22a6e4a32f596f0', // zengo
+          '84b43e8ddfcd18e5fcb5d21e7277733f9cccef76f7d92c836d0e481db0c70c04', // blockchain.com
         },
       );
       await w3mService.init();
