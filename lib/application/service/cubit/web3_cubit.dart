@@ -12,12 +12,16 @@ class Web3Cubit extends Cubit<Web3State> {
 
   late W3MService w3mService;
 
+  bool get isLoginWithWalletConnect =>
+      w3mService.session?.connectedWalletName == 'Email Wallet';
+
   Future<void> fetchGreeting() async {
     try {
+      await w3mService.selectChain(W3MChainPresets.chains['11155111']);
+
       final List<dynamic> contractData = await w3mService.requestReadContract(
         deployedContract: await deployedGreeterContract,
         functionName: greetFunction,
-        rpcUrl: dotenv.get('ETHEREUM_RPC'),
       );
       emit(FetchGreetingSuccess(message: contractData[0].toString()));
     } catch (e) {
@@ -27,6 +31,17 @@ class Web3Cubit extends Cubit<Web3State> {
           message: 'Unable to fetch contract data',
         ),
       );
+    }
+  }
+
+  void _addExtraChains() {
+    for (final MapEntry<String, W3MChainInfo> entry
+        in W3MChainPresets.extraChains.entries) {
+      W3MChainPresets.chains.putIfAbsent(entry.key, () => entry.value);
+    }
+    for (final MapEntry<String, W3MChainInfo> entry
+        in W3MChainPresets.testChains.entries) {
+      W3MChainPresets.chains.putIfAbsent(entry.key, () => entry.value);
     }
   }
 
@@ -59,6 +74,7 @@ class Web3Cubit extends Cubit<Web3State> {
           '84b43e8ddfcd18e5fcb5d21e7277733f9cccef76f7d92c836d0e481db0c70c04', // blockchain.com
         },
       );
+      _addExtraChains();
       await w3mService.init();
 
       emit(InitializeWeb3MSuccess(service: w3mService));
@@ -104,7 +120,6 @@ class Web3Cubit extends Cubit<Web3State> {
         await w3mService.requestWriteContract(
           chainId: 'eip155:${dotenv.get('ETHEREUM_CHAIN_ID')}',
           topic: w3mService.session?.topic ?? '',
-          rpcUrl: dotenv.get('ETHEREUM_RPC'),
           deployedContract: await deployedGreeterContract,
           functionName: setGreetingFunction,
           parameters: <String>[text],
