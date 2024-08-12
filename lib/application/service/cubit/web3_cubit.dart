@@ -14,6 +14,8 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> fetchGreeting() async {
     try {
+      await w3mService.selectChain(W3MChainPresets.chains['11155111']);
+
       final List<dynamic> contractData = await w3mService.requestReadContract(
         deployedContract: await deployedGreeterContract,
         functionName: greetFunction,
