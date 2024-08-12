@@ -19,6 +19,7 @@ dependencies:
       url: git@github.com:Nuxify/widgetbook.git
       ref: v1.0.0
   shimmer: ^3.0.0
+  url_launcher: ^6.3.0
   web3dart: ^2.7.1
   web3modal_flutter: 3.3.0
 
