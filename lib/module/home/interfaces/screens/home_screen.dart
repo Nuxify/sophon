@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:sophon/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
+    final bool isLoginWithWalletConnect =
+        context.read<Web3Cubit>().isLoginWithWalletConnect;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -146,41 +149,71 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               color: Colors.white10,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: FilledTextField(
-                      hintText: 'Update the contract...',
-                      hintStyle:
-                          const TextStyle(color: Colors.white30, fontSize: 13),
-                      controller: greetingTextController,
-                      fillColor: Colors.white.withOpacity(0.05),
-                      isDense: true,
+              child: isLoginWithWalletConnect
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () => launchUrl(
+                          Uri.parse(
+                            'https://secure.walletconnect.com/dashboard',
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(kPink),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(11),
+                            ),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Text(
+                            'Upgrade Wallet',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: FilledTextField(
+                            hintText: 'Update the contract...',
+                            hintStyle: const TextStyle(
+                              color: Colors.white30,
+                              fontSize: 13,
+                            ),
+                            controller: greetingTextController,
+                            fillColor: Colors.white.withOpacity(0.05),
+                            isDense: true,
+                          ),
+                        ),
+                        IconButton.filled(
+                          color: kPink,
+                          focusColor: kPink,
+                          highlightColor: kPink,
+                          hoverColor: kPink,
+                          splashColor: kPink,
+                          disabledColor: kPink,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(kPink),
+                          ),
+                          onPressed: () {
+                            context.read<Web3Cubit>().updateGreeting(
+                                  text: greetingTextController.text,
+                                );
+                            greetingTextController.text = '';
+                          },
+                          icon: const Icon(
+                            Icons.send_rounded,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  IconButton.filled(
-                    color: kPink,
-                    focusColor: kPink,
-                    highlightColor: kPink,
-                    hoverColor: kPink,
-                    splashColor: kPink,
-                    disabledColor: kPink,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kPink),
-                    ),
-                    onPressed: () {
-                      context
-                          .read<Web3Cubit>()
-                          .updateGreeting(text: greetingTextController.text);
-                      greetingTextController.text = '';
-                    },
-                    icon: const Icon(
-                      Icons.send_rounded,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),

@@ -12,6 +12,9 @@ class Web3Cubit extends Cubit<Web3State> {
 
   late W3MService w3mService;
 
+  bool get isLoginWithWalletConnect =>
+      w3mService.session?.connectedWalletName == 'Email Wallet';
+
   Future<void> fetchGreeting() async {
     try {
       await w3mService.selectChain(W3MChainPresets.chains['11155111']);
