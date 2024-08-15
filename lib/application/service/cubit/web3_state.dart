@@ -62,3 +62,9 @@ class WalletConnectionFailed extends Web3State {
   final String errorCode;
   final String message;
 }
+
+class FetchHomeScreenActionButtonSuccess extends Web3State {
+  const FetchHomeScreenActionButtonSuccess({required this.action});
+
+  final HomeScreenActionButton action;
+}

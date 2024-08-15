@@ -7,12 +7,18 @@ import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 part 'web3_state.dart';
 
+enum HomeScreenActionButton {
+  upgradeWallet,
+  writeToContract,
+  connectWallet,
+}
+
 class Web3Cubit extends Cubit<Web3State> {
   Web3Cubit() : super(const Web3State());
 
   late W3MService w3mService;
 
-  bool get isLoginWithWalletConnect =>
+  bool get isLoggedInViaEmail =>
       w3mService.session?.connectedWalletName == 'Email Wallet';
 
   Future<void> fetchGreeting() async {
@@ -76,14 +82,11 @@ class Web3Cubit extends Cubit<Web3State> {
       );
       _addExtraChains();
       await w3mService.init();
-
-      emit(InitializeWeb3MSuccess(service: w3mService));
-
-      if (w3mService.isConnected) {
-        emit(const WalletConnectionSuccess());
-      } else {
+      fetchHomeScreenActionButton();
+      if (!w3mService.isConnected) {
         listenToWalletConnection();
       }
+      emit(InitializeWeb3MSuccess(service: w3mService));
     } catch (e) {
       emit(InitializeWeb3MFailed());
     }
@@ -91,8 +94,7 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> listenToWalletConnection() async {
     try {
-      w3mService.onModalConnect
-          .subscribe((_) => emit(const WalletConnectionSuccess()));
+      w3mService.onModalConnect.subscribe((_) => fetchHomeScreenActionButton());
     } catch (e) {
       emit(
         const WalletConnectionFailed(
@@ -136,5 +138,27 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> endSession() async {
     await w3mService.disconnect();
+  }
+
+  Future<void> fetchHomeScreenActionButton() async {
+    if (isLoggedInViaEmail) {
+      emit(
+        const FetchHomeScreenActionButtonSuccess(
+          action: HomeScreenActionButton.upgradeWallet,
+        ),
+      );
+    } else if (!w3mService.isConnected) {
+      emit(
+        const FetchHomeScreenActionButtonSuccess(
+          action: HomeScreenActionButton.connectWallet,
+        ),
+      );
+    } else if (w3mService.isConnected) {
+      emit(
+        const FetchHomeScreenActionButtonSuccess(
+          action: HomeScreenActionButton.writeToContract,
+        ),
+      );
+    }
   }
 }
