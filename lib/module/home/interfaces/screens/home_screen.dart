@@ -157,7 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () => widget.w3mService.launchBlockExplorer(),
+                      onPressed: () async {
+                        final String blockchainExplorer =
+                            await context.read<Web3Cubit>().blockchainExplorer;
+                        await launchUrl(Uri.parse(blockchainExplorer));
+                      },
                       label: const Icon(
                         Icons.launch_rounded,
                         color: Colors.white,

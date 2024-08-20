@@ -21,6 +21,14 @@ class Web3Cubit extends Cubit<Web3State> {
   bool get isLoggedInViaEmail =>
       w3mService.session?.connectedWalletName == 'Email Wallet';
 
+  Future<String> get blockchainExplorer async {
+    final String blockExplorer =
+        w3mService.selectedChain?.blockExplorer?.url ?? '';
+    final String address = (await deployedGreeterContract).address.toString();
+
+    return '$blockExplorer/address/$address';
+  }
+
   Future<void> fetchGreeting() async {
     try {
       await w3mService.selectChain(W3MChainPresets.chains['11155111']);
