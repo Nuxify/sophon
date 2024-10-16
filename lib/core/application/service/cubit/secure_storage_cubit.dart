@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/domain/repository/secure_storage_repository.dart';
+import 'package:sophon/core/domain/repository/secure_storage_repository.dart';
 
 class SecureStorageCubit extends Cubit<void> {
   SecureStorageCubit({required this.storage}) : super(null);

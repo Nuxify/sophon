@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/module/home/interfaces/screens/home_screen.dart';
 import 'package:sophon/gen/assets.gen.dart';
 import 'package:sophon/internal/utils.dart';
-import 'package:sophon/module/home/interfaces/screens/home_screen.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
