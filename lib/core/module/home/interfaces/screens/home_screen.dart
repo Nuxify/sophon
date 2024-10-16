@@ -1,14 +1,15 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:nuxify_widgetbook/input/filled_textfield.dart';
 import 'package:nuxify_widgetbook/views/alert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sophon/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/configs/themes.dart';
+import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/gen/fonts.gen.dart';
-import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 

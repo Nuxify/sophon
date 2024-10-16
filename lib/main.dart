@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sophon/application/service/cubit/secure_storage_cubit.dart';
-import 'package:sophon/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/configs/themes.dart';
-import 'package:sophon/infrastructures/repository/secure_storage_repository.dart';
-import 'package:sophon/module/auth/application/service/cubit/auth_cubit.dart';
-import 'package:sophon/module/auth/interfaces/screens/authentication_screen.dart';
+import 'package:sophon/core/application/service/cubit/secure_storage_cubit.dart';
+import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/infrastructures/repository/secure_storage_repository.dart';
+import 'package:sophon/core/module/auth/application/service/cubit/auth_cubit.dart';
+import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 Future<void> main() async {
