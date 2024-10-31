@@ -10,6 +10,7 @@ import 'package:sophon/configs/themes.dart';
 import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/gen/fonts.gen.dart';
+import 'package:sophon/internal/enums.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 

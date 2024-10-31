@@ -2,16 +2,11 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/configs/web3_config.dart';
+import 'package:sophon/internal/enums.dart';
 import 'package:sophon/internal/web3_contract.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 part 'web3_state.dart';
-
-enum HomeScreenActionButton {
-  upgradeWallet,
-  writeToContract,
-  connectWallet,
-}
 
 class Web3Cubit extends Cubit<Web3State> {
   Web3Cubit() : super(const Web3State());
