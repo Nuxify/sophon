@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/application/service/cubit/web3_api_cubit.dart';
 import 'package:sophon/core/module/home/interfaces/screens/home_screen.dart';
 import 'package:sophon/gen/assets.gen.dart';
 import 'package:sophon/internal/utils.dart';
@@ -16,18 +16,18 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<Web3Cubit>().instantiate();
+    context.read<Web3APICubit>().instantiate();
   }
 
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
 
-    return BlocListener<Web3Cubit, Web3State>(
-      listenWhen: (Web3State previous, Web3State current) =>
+    return BlocListener<Web3APICubit, Web3APIState>(
+      listenWhen: (Web3APIState previous, Web3APIState current) =>
           current is InitializeWeb3MSuccess ||
           current is WalletConnectionFailed,
-      listener: (BuildContext context, Web3State state) {
+      listener: (BuildContext context, Web3APIState state) {
         if (state is InitializeWeb3MSuccess) {
           Navigator.pushReplacement(
             context,

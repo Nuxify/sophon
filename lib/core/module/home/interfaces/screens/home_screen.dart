@@ -7,7 +7,7 @@ import 'package:nuxify_widgetbook/input/filled_textfield.dart';
 import 'package:nuxify_widgetbook/views/alert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sophon/configs/themes.dart';
-import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/application/service/cubit/web3_api_cubit.dart';
 import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:sophon/gen/fonts.gen.dart';
 import 'package:sophon/internal/enums.dart';
@@ -28,15 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void startContractReadInterval() {
     timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      context.read<Web3Cubit>().fetchGreeting();
+      context.read<Web3APICubit>().fetchGreeting();
     });
   }
 
   @override
   void initState() {
     super.initState();
-    context.read<Web3Cubit>().fetchGreeting();
-    context.read<Web3Cubit>().fetchHomeScreenActionButton();
+    context.read<Web3APICubit>().fetchGreeting();
+    context.read<Web3APICubit>().fetchHomeScreenActionButton();
 
     startContractReadInterval();
   }
@@ -83,12 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: kPink.withOpacity(0.5)),
               ),
-              child: BlocBuilder<Web3Cubit, Web3State>(
-                buildWhen: (Web3State previous, Web3State current) =>
+              child: BlocBuilder<Web3APICubit, Web3APIState>(
+                buildWhen: (Web3APIState previous, Web3APIState current) =>
                     current is FetchGreetingSuccess ||
                     current is FetchGreetingFailed ||
                     current is FetchGreetingLoading,
-                builder: (BuildContext context, Web3State state) {
+                builder: (BuildContext context, Web3APIState state) {
                   if (state is FetchGreetingSuccess) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: () async {
                         final String blockchainExplorer =
-                            await context.read<Web3Cubit>().blockchainExplorer;
+                            await context.read<Web3APICubit>().blockchainExplorer;
                         await launchUrl(Uri.parse(blockchainExplorer));
                       },
                       label: const Icon(
@@ -175,10 +175,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  BlocBuilder<Web3Cubit, Web3State>(
-                    buildWhen: (Web3State previous, Web3State current) =>
+                  BlocBuilder<Web3APICubit, Web3APIState>(
+                    buildWhen: (Web3APIState previous, Web3APIState current) =>
                         current is FetchHomeScreenActionButtonSuccess,
-                    builder: (BuildContext context, Web3State state) {
+                    builder: (BuildContext context, Web3APIState state) {
                       if (state is FetchHomeScreenActionButtonSuccess &&
                           state.action ==
                               HomeScreenActionButton.upgradeWallet) {
@@ -272,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         onPressed: () {
                                           context
-                                              .read<Web3Cubit>()
+                                              .read<Web3APICubit>()
                                               .endSession();
                                           Navigator.pushReplacement(
                                             context,
@@ -328,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         MaterialStateProperty.all(kPink),
                                   ),
                                   onPressed: () {
-                                    context.read<Web3Cubit>().updateGreeting(
+                                    context.read<Web3APICubit>().updateGreeting(
                                           text: greetingTextController.text,
                                         );
                                     greetingTextController.text = '';

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/core/application/service/cubit/secure_storage_cubit.dart';
-import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
+import 'package:sophon/core/application/service/cubit/web3_api_cubit.dart';
 import 'package:sophon/core/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/core/module/auth/application/service/cubit/auth_cubit.dart';
 import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen.dart';
@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
-        BlocProvider<Web3Cubit>(
-          create: (BuildContext context) => Web3Cubit(),
+        BlocProvider<Web3APICubit>(
+          create: (BuildContext context) => Web3APICubit(),
         ),
         BlocProvider<AuthCubit>(
           create: (BuildContext context) => AuthCubit(

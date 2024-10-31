@@ -6,10 +6,10 @@ import 'package:sophon/internal/enums.dart';
 import 'package:sophon/internal/web3_contract.dart';
 import 'package:web3modal_flutter/web3modal_flutter.dart';
 
-part 'web3_state.dart';
+part 'web3_api_state.dart';
 
-class Web3Cubit extends Cubit<Web3State> {
-  Web3Cubit() : super(const Web3State());
+class Web3APICubit extends Cubit<Web3APIState> {
+  Web3APICubit() : super(const Web3APIState());
 
   late W3MService w3mService;
 
