@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:reown_appkit/reown_appkit.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/core/application/service/cubit/secure_storage_cubit.dart';
 import 'package:sophon/core/application/service/cubit/web3_cubit.dart';
 import 'package:sophon/core/infrastructures/repository/secure_storage_repository.dart';
 import 'package:sophon/core/module/auth/application/service/cubit/auth_cubit.dart';
 import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen.dart';
-import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 Future<void> main() async {
   /// Load env file
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: Web3ModalTheme(
+      child: ReownAppKitModalTheme(
         isDarkMode: true,
         child: MaterialApp(
           title: 'Sophon',
@@ -50,14 +50,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return const AuthenticationScreen();
