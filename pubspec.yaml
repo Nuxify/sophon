@@ -42,7 +42,7 @@ flutter:
 
   assets:
     - .env
-    - lib/contracts/staging/greeter.abi.json
+    - lib/core/infrastructures/contracts/staging/greeter.abi.json
     - assets/images/
 
 
