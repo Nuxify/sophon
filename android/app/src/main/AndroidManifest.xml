@@ -41,6 +41,9 @@
             android:value="2" />
     </application>
     
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <queries>
         <package android:name="io.metamask" /> 
         <package android:name="org.toshi"/>
