@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nuxify_widgetbook/input/filled_textfield.dart';
-import 'package:nuxify_widgetbook/views/alert_dialog.dart';
+import 'package:nuxify_widgetbook_core/indicators/widget_loader.dart';
+import 'package:nuxify_widgetbook_core/input/filled_textfield.dart';
+import 'package:nuxify_widgetbook_core/views/alert_dialog.dart';
 import 'package:reown_appkit/reown_appkit.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sophon/configs/themes.dart';
@@ -370,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           );
                         }
-                        return const SizedBox(child: LinearProgressIndicator());
+                        return const CardLoader(height: 36);
                       },
                     ),
                   ],
