@@ -15,5 +15,5 @@ ThemeData _buildDefaultTheme() {
   );
 }
 
-Color shimmerBase = kPink.withOpacity(0.2);
-Color shimmerGlow = kPink.withOpacity(0.5);
+Color shimmerBase = kPink.withValues(alpha: 0.2);
+Color shimmerGlow = kPink.withValues(alpha: 0.5);

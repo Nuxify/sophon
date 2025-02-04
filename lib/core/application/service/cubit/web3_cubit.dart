@@ -1,29 +1,23 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:reown_appkit/reown_appkit.dart';
 import 'package:sophon/configs/web3_config.dart';
+import 'package:sophon/internal/enums.dart';
 import 'package:sophon/internal/web3_contract.dart';
-import 'package:web3modal_flutter/web3modal_flutter.dart';
 
 part 'web3_state.dart';
-
-enum HomeScreenActionButton {
-  upgradeWallet,
-  writeToContract,
-  connectWallet,
-}
 
 class Web3Cubit extends Cubit<Web3State> {
   Web3Cubit() : super(const Web3State());
 
-  late W3MService w3mService;
+  late ReownAppKitModal w3mService;
 
   bool get isLoggedInViaEmail =>
       w3mService.session?.connectedWalletName == 'Email Wallet';
 
   Future<String> get blockchainExplorer async {
-    final String blockExplorer =
-        w3mService.selectedChain?.blockExplorer?.url ?? '';
+    final String blockExplorer = w3mService.selectedChain?.explorerUrl ?? '';
     final String address = (await deployedGreeterContract).address.toString();
 
     return '$blockExplorer/address/$address';
@@ -31,12 +25,13 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> fetchGreeting() async {
     try {
-      await w3mService.selectChain(W3MChainPresets.chains['11155111']);
-
       final List<dynamic> contractData = await w3mService.requestReadContract(
+        topic: null,
+        chainId: w3mService.selectedChain!.chainId,
         deployedContract: await deployedGreeterContract,
         functionName: greetFunction,
       );
+
       emit(FetchGreetingSuccess(message: contractData[0].toString()));
     } catch (e) {
       emit(
@@ -48,23 +43,23 @@ class Web3Cubit extends Cubit<Web3State> {
     }
   }
 
-  void _addExtraChains() {
-    for (final MapEntry<String, W3MChainInfo> entry
-        in W3MChainPresets.extraChains.entries) {
-      W3MChainPresets.chains.putIfAbsent(entry.key, () => entry.value);
-    }
-    for (final MapEntry<String, W3MChainInfo> entry
-        in W3MChainPresets.testChains.entries) {
-      W3MChainPresets.chains.putIfAbsent(entry.key, () => entry.value);
-    }
-  }
+  // void _addExtraChains() {
+  //   for (final MapEntry<String, ReownAppKitModalNetworkInfo> entry
+  //       in ReownAppKitModalNetworks.) {
+  //     ReownAppKitModalNetworks.chains.putIfAbsent(entry.key, () => entry.value);
+  //   }
+  //   for (final MapEntry<String, ReownAppKitModalNetworkInfo> entry
+  //       in ReownAppKitModalNetworks.testChains.entries) {
+  //     ReownAppKitModalNetworks.chains.putIfAbsent(entry.key, () => entry.value);
+  //   }
+  // }
 
-  Future<void> instantiate() async {
+  Future<void> instantiate(BuildContext context) async {
     try {
       const String url = 'https://github.com/Nuxify/Sophon';
-      w3mService = W3MService(
-        enableEmail: true,
-        projectId: '2684f2b98f5ae4051dce454b5862b9ff',
+      w3mService = ReownAppKitModal(
+        context: context,
+        projectId: 'ca39991258c8cb8f99a5ff8eae88b6c5',
         metadata: const PairingMetadata(
           name: 'Sophon',
           description:
@@ -73,11 +68,12 @@ class Web3Cubit extends Cubit<Web3State> {
           icons: <String>[
             'https://files-nuximart.sgp1.cdn.digitaloceanspaces.com/nuxify-website/blog/images/Nuxify-logo.png',
           ],
-          redirect: Redirect(
-            universal: url,
-            native: url,
-          ),
+          redirect: Redirect(universal: url, native: url),
         ),
+        excludedWalletIds: <String>{
+          'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
+          'a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393',
+        },
         includedWalletIds: <String>{
           'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // metamask
           '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // trust
@@ -88,8 +84,17 @@ class Web3Cubit extends Cubit<Web3State> {
           '84b43e8ddfcd18e5fcb5d21e7277733f9cccef76f7d92c836d0e481db0c70c04', // blockchain.com
         },
       );
-      _addExtraChains();
       await w3mService.init();
+      await w3mService.selectChain(
+        ReownAppKitModalNetworkInfo(
+          chainId: '11155111',
+          name: 'Sepolia',
+          currency: 'ETH',
+          rpcUrl: 'https://1rpc.io/sepolia',
+          explorerUrl: 'https://sepolia.etherscan.io/',
+        ),
+      );
+
       fetchHomeScreenActionButton();
       if (!w3mService.isConnected) {
         listenToWalletConnection();
@@ -128,12 +133,11 @@ class Web3Cubit extends Cubit<Web3State> {
         w3mService.launchConnectedWallet();
 
         await w3mService.requestWriteContract(
-          chainId: 'eip155:${dotenv.get('ETHEREUM_CHAIN_ID')}',
+          chainId: w3mService.selectedChain!.chainId,
           topic: w3mService.session?.topic ?? '',
           deployedContract: await deployedGreeterContract,
           functionName: setGreetingFunction,
           parameters: <String>[text],
-          method: setGreetingFunction,
           transaction: Transaction(
             from: EthereumAddress.fromHex(sender),
           ),

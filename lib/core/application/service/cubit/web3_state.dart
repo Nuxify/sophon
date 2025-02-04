@@ -40,7 +40,7 @@ class UpdateGreetingFailed extends Web3State {
 class InitializeWeb3MSuccess extends Web3State {
   const InitializeWeb3MSuccess({required this.service});
 
-  final W3MService service;
+  final ReownAppKitModal service;
 }
 
 class InitializeWeb3MFailed extends Web3State {}
@@ -64,7 +64,9 @@ class WalletConnectionFailed extends Web3State {
 }
 
 class FetchHomeScreenActionButtonSuccess extends Web3State {
-  const FetchHomeScreenActionButtonSuccess({required this.action});
+  const FetchHomeScreenActionButtonSuccess({
+    required this.action,
+  });
 
   final HomeScreenActionButton action;
 }
