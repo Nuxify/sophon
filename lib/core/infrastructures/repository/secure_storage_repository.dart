@@ -5,18 +5,18 @@ class SecureStorageRepository implements ISecureStorageRepository {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   @override
-  Future<void> write({required String key, required String? value}) async =>
+  Future<void> write({required String key, required String? value}) =>
       _storage.write(
         key: key,
         value: value,
       );
 
   @override
-  Future<String?> read({required String key}) async => _storage.read(key: key);
+  Future<String?> read({required String key}) => _storage.read(key: key);
 
   @override
-  Future<void> delete({required String key}) async => _storage.delete(key: key);
+  Future<void> delete({required String key}) => _storage.delete(key: key);
 
   @override
-  Future<void> clear() async => _storage.deleteAll();
+  Future<void> clear() => _storage.deleteAll();
 }
