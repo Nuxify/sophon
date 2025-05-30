@@ -86,7 +86,7 @@ class Web3Cubit extends Cubit<Web3State> {
       );
       await w3mService.init();
       await w3mService.selectChain(
-        ReownAppKitModalNetworkInfo(
+        const ReownAppKitModalNetworkInfo(
           chainId: '11155111',
           name: 'Sepolia',
           currency: 'ETH',
@@ -129,8 +129,6 @@ class Web3Cubit extends Cubit<Web3State> {
 
       if (accounts.isNotEmpty) {
         final String sender = accounts.first.split(':').last;
-
-        w3mService.launchConnectedWallet();
 
         await w3mService.requestWriteContract(
           chainId: w3mService.selectedChain!.chainId,
