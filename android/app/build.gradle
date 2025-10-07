@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    // Use modern Kotlin Android plugin ID aligned with settings.gradle
     id 'org.jetbrains.kotlin.android'
     id 'dev.flutter.flutter-gradle-plugin'
 }
@@ -39,7 +40,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
+    buildToolsVersion "36.0.0"
+    ndkVersion "28.0.12674087"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
