@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:reown_appkit/reown_appkit.dart';
 
 /// Get deployed greeter contract
 Future<DeployedContract> get deployedGreeterContract async {
