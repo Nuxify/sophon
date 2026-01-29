@@ -86,89 +86,96 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: SafeArea(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Visibility(
-                  visible: w3mService != null && w3mService!.isConnected,
-                  child: Container(
-                    width: width,
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                      left: 25,
-                      right: 25,
-                      bottom: 30,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      vertical: height * 0.03,
-                      horizontal: width * 0.05,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: kPink.withValues(alpha: 0.5)),
-                    ),
-                    child: BlocBuilder<Web3Cubit, Web3State>(
-                      buildWhen: (Web3State previous, Web3State current) =>
-                          current is FetchGreetingSuccess ||
-                          current is FetchGreetingFailed ||
-                          current is FetchGreetingLoading,
-                      builder: (BuildContext context, Web3State state) {
-                        if (state is FetchGreetingSuccess) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              RichText(
-                                text: TextSpan(
-                                  children: <InlineSpan>[
-                                    const TextSpan(
-                                      text: 'Greeter Smart Contract at:\n\n',
-                                    ),
-                                    TextSpan(
-                                      text: dotenv.get(
-                                        'GREETER_CONTRACT_ADDRESS',
-                                      ),
-                                      style: const TextStyle(
-                                        color: kPink,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: '\n\nCurrently says:\n',
-                                    ),
-                                  ],
-                                  style: const TextStyle(
-                                    fontFamily: FontFamily.openSans,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  '"${state.message}"',
-                                  style: const TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return Shimmer.fromColors(
-                          baseColor: shimmerBase,
-                          highlightColor: shimmerGlow,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(11),
-                              color: Colors.white,
-                            ),
-                            width: MediaQuery.of(context).size.width,
-                            height: 45,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Visibility(
+                      visible: w3mService != null && w3mService!.isConnected,
+                      child: Container(
+                        width: width,
+                        margin: const EdgeInsets.only(
+                          top: 20,
+                          left: 25,
+                          right: 25,
+                          bottom: 30,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: height * 0.03,
+                          horizontal: width * 0.05,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: kPink.withValues(alpha: 0.5),
                           ),
-                        );
-                      },
+                        ),
+                        child: BlocBuilder<Web3Cubit, Web3State>(
+                          buildWhen: (Web3State previous, Web3State current) =>
+                              current is FetchGreetingSuccess ||
+                              current is FetchGreetingFailed ||
+                              current is FetchGreetingLoading,
+                          builder: (BuildContext context, Web3State state) {
+                            if (state is FetchGreetingSuccess) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  RichText(
+                                    text: TextSpan(
+                                      children: <InlineSpan>[
+                                        const TextSpan(
+                                          text:
+                                              'Greeter Smart Contract at:\n\n',
+                                        ),
+                                        TextSpan(
+                                          text: dotenv.get(
+                                            'GREETER_CONTRACT_ADDRESS',
+                                          ),
+                                          style: const TextStyle(
+                                            color: kPink,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: '\n\nCurrently says:\n',
+                                        ),
+                                      ],
+                                      style: const TextStyle(
+                                        fontFamily: FontFamily.openSans,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '"${state.message}"',
+                                      style: const TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Shimmer.fromColors(
+                              baseColor: shimmerBase,
+                              highlightColor: shimmerGlow,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(11),
+                                  color: Colors.white,
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                height: 45,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -13,11 +13,21 @@ class Web3Cubit extends Cubit<Web3State> {
 
   late ReownAppKitModal w3mService;
 
+  final ReownAppKitModalNetworkInfo sepoliaChain =
+      const ReownAppKitModalNetworkInfo(
+        chainId: 'eip155:11155111',
+        name: 'Sepolia',
+        currency: 'ETH',
+        rpcUrl: 'https://1rpc.io/sepolia',
+        explorerUrl: 'https://sepolia.etherscan.io/',
+      );
+
   bool get isLoggedInViaEmail =>
       w3mService.session?.connectedWalletName == 'Email Wallet';
 
   Future<String> get blockchainExplorer async {
-    final String blockExplorer = w3mService.selectedChain?.explorerUrl ?? '';
+    final String blockExplorer =
+        w3mService.selectedChain?.explorerUrl ?? sepoliaChain.explorerUrl;
     final String address = (await deployedGreeterContract).address.toString();
 
     return '$blockExplorer/address/$address';
@@ -25,15 +35,17 @@ class Web3Cubit extends Cubit<Web3State> {
 
   Future<void> fetchGreeting() async {
     try {
+      // inspect(w3mService);
       final List<dynamic> contractData = await w3mService.requestReadContract(
         topic: null,
-        chainId: w3mService.selectedChain!.chainId,
+        chainId: w3mService.selectedChain?.chainId ?? sepoliaChain.chainId,
         deployedContract: await deployedGreeterContract,
         functionName: greetFunction,
       );
 
       emit(FetchGreetingSuccess(message: contractData[0].toString()));
     } catch (e) {
+      print(e);
       emit(
         const FetchGreetingFailed(
           errorCode: '',
@@ -85,16 +97,7 @@ class Web3Cubit extends Cubit<Web3State> {
         },
       );
       await w3mService.init();
-      await w3mService.selectChain(
-        const ReownAppKitModalNetworkInfo(
-          chainId: '11155111',
-          name: 'Sepolia',
-          currency: 'ETH',
-          rpcUrl: 'https://1rpc.io/sepolia',
-          explorerUrl: 'https://sepolia.etherscan.io/',
-        ),
-      );
-
+      await w3mService.selectChain(sepoliaChain);
       fetchHomeScreenActionButton();
       if (!w3mService.isConnected) {
         listenToWalletConnection();
@@ -118,9 +121,7 @@ class Web3Cubit extends Cubit<Web3State> {
     }
   }
 
-  Future<void> updateGreeting({
-    required String text,
-  }) async {
+  Future<void> updateGreeting({required String text}) async {
     emit(UpdateGreetingLoading());
 
     try {
@@ -131,7 +132,7 @@ class Web3Cubit extends Cubit<Web3State> {
         final String sender = accounts.first.split(':').last;
 
         await w3mService.requestWriteContract(
-          chainId: w3mService.selectedChain!.chainId,
+          chainId: w3mService.selectedChain?.chainId ?? sepoliaChain.chainId,
           topic: w3mService.session?.topic ?? '',
           deployedContract: await deployedGreeterContract,
           functionName: setGreetingFunction,
