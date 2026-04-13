@@ -45,7 +45,6 @@ class Web3Cubit extends Cubit<Web3State> {
 
       emit(FetchGreetingSuccess(message: contractData[0].toString()));
     } catch (e) {
-      print(e);
       emit(
         const FetchGreetingFailed(
           errorCode: '',

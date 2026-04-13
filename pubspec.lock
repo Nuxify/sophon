@@ -852,11 +852,11 @@ packages:
     dependency: "direct main"
     description:
       path: core
-      ref: "v1.7.2"
-      resolved-ref: c8fd771acc1d8f6fe65ff826014e7a20ec6c5470
+      ref: "v1.7.7"
+      resolved-ref: "36ebf29f021d43bdf52f4773c155da75065a9183"
       url: "https://github.com/Nuxify/widgetbook.git"
     source: git
-    version: "1.7.2"
+    version: "1.7.7"
   objective_c:
     dependency: transitive
     description:
