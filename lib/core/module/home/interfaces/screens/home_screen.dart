@@ -205,10 +205,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .blockchainExplorer;
                             await launchUrl(Uri.parse(blockchainExplorer));
                           },
-                          label: const Icon(
-                            Icons.launch_rounded,
-                            color: Colors.white,
-                            size: 17,
+                          label: Semantics(
+                            label: 'Launch Block Explorer',
+                            child: const Icon(
+                              Icons.launch_rounded,
+                              color: Colors.white,
+                              size: 17,
+                            ),
                           ),
                           icon: const Text(
                             'Launch Block Explorer',
@@ -275,9 +278,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     'Connect Wallet',
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                  label: const Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.white,
+                                  label: Semantics(
+                                    label: 'Connect Wallet',
+                                    child: const Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -343,10 +349,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       );
                                     },
-                                    label: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 17,
+                                    label: Semantics(
+                                      label: 'Disconnect Wallet',
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 17,
+                                      ),
                                     ),
                                     icon: const Text(
                                       'Disconnect Wallet',
@@ -357,18 +366,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   children: <Widget>[
                                     Expanded(
-                                      child: FilledTextField(
-                                        borderRadius: 8,
-                                        hintText: 'Update the contract...',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white30,
-                                          fontSize: 13,
+                                      child: Semantics(
+                                        textField: true,
+                                        label: 'Update the contract input',
+                                        child: FilledTextField(
+                                          borderRadius: 8,
+                                          hintText: 'Update the contract...',
+                                          hintStyle: const TextStyle(
+                                            color: Colors.white30,
+                                            fontSize: 13,
+                                          ),
+                                          controller: greetingTextController,
+                                          fillColor: Colors.white.withValues(
+                                            alpha: 0.05,
+                                          ),
+                                          isDense: true,
                                         ),
-                                        controller: greetingTextController,
-                                        fillColor: Colors.white.withValues(
-                                          alpha: 0.05,
-                                        ),
-                                        isDense: true,
                                       ),
                                     ),
                                     IconButton.filled(
@@ -390,9 +403,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             );
                                         greetingTextController.text = '';
                                       },
-                                      icon: const Icon(
-                                        Icons.send_rounded,
-                                        color: Colors.white,
+                                      icon: Semantics(
+                                        label: 'Send greeting',
+                                        child: const Icon(
+                                          Icons.send_rounded,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ],

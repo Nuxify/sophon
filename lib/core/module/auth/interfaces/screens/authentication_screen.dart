@@ -45,7 +45,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Assets.images.space.image(width: width * 0.8),
+                    Assets.images.space.image(
+                      width: width * 0.8,
+                      semanticLabel: 'Sophon splash image',
+                    ),
                     const Text(
                       'Sophon',
                       style: TextStyle(fontSize: 20, color: Colors.white),
