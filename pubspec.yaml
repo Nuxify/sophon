@@ -1,32 +1,33 @@
 name: sophon
 description: A new Flutter project.
-publish_to: 'none' 
+publish_to: 'none'
 version: 3.3.4
 
 environment:
-  sdk: ^3.10.7
+  sdk: ^3.13.7
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
-  flutter_dotenv: ^6.0.0
-  flutter_secure_storage: ^9.2.4
+  flutter_dotenv: ^6.0.1
+  flutter_secure_storage: ^10.3.4
   http: ^1.6.0
-  intl: ^0.20.2
+  intl: ^0.20.3
+  material_ui: ^1.11.0
   nuxify_widgetbook_core:
     git:
       url: https://github.com/Nuxify/widgetbook.git
       path: core
       ref: v1.7.7
-  reown_appkit: ^1.8.1
+  reown_appkit: ^1.9.0
   shimmer: ^3.0.0
-  url_launcher: ^6.3.2
-  web3dart: ^3.0.2
+  url_launcher: ^6.3.3
+  web3dart: ^3.0.3
 dev_dependencies:
   bloc_test: ^10.0.0
-  build_runner: ^2.10.5
-  flutter_gen_runner: ^5.12.0
+  build_runner: ^2.16.1
+  flutter_gen_runner: ^5.15.0
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_native_splash: ^2.4.7
@@ -34,8 +35,7 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.11.2
   lint: ^2.8.0
-  mocktail: ^1.0.4
-
+  mocktail: ^1.0.5
 
 flutter:
   uses-material-design: true
@@ -44,7 +44,6 @@ flutter:
     - .env
     - lib/core/infrastructures/contracts/staging/greeter.abi.json
     - assets/images/
-
 
   fonts:
     - family: OpenSans
@@ -61,7 +60,7 @@ flutter_launcher_icons:
   image_path: "assets/images/app-launcher-icon.png"
   remove_alpha_ios: true
   background_color_ios: "#000000"
-  
+
 flutter_native_splash:
   color: "#000000"
   image: assets/images/logo.png
