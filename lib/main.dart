@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    as flutter_localizations;
+import 'package:material_ui/material_ui.dart';
 import 'package:reown_appkit/reown_appkit.dart';
 import 'package:sophon/configs/themes.dart';
 import 'package:sophon/core/application/service/cubit/secure_storage_cubit.dart';
@@ -11,30 +13,24 @@ import 'package:sophon/core/module/auth/interfaces/screens/authentication_screen
 
 Future<void> main() async {
   /// Load env file
-  await dotenv.load();
+  await dotenv.load(fileName: 'config.env');
 
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class const MyApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
-        BlocProvider<Web3Cubit>(
-          create: (BuildContext context) => Web3Cubit(),
-        ),
+        BlocProvider<Web3Cubit>(create: (BuildContext context) => Web3Cubit()),
         BlocProvider<AuthCubit>(
-          create: (BuildContext context) => AuthCubit(
-            storage: SecureStorageRepository(),
-          ),
+          create: (BuildContext context) =>
+              AuthCubit(storage: SecureStorageRepository()),
         ),
         BlocProvider<SecureStorageCubit>(
-          create: (BuildContext context) => SecureStorageCubit(
-            storage: SecureStorageRepository(),
-          ),
+          create: (BuildContext context) =>
+              SecureStorageCubit(storage: SecureStorageRepository()),
         ),
       ],
       child: ReownAppKitModalTheme(
@@ -42,6 +38,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Sophon',
           debugShowCheckedModeBanner: false,
+          localizationsDelegates:
+              // ignore: deprecated_member_use
+              flutter_localizations.GlobalMaterialLocalizations.delegates,
           theme: defaultTheme,
           home: const MyHomePage(),
         ),
@@ -50,9 +49,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
+class const MyHomePage({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AuthenticationScreen();

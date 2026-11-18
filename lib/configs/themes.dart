@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sophon/gen/fonts.gen.dart';
 
 final ThemeData defaultTheme = _buildDefaultTheme();
