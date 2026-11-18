@@ -1,39 +1,33 @@
 import UIKit
 import Flutter
 import CoinbaseWalletSDK
-
-@UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate {
+@main
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-    
-  override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        if #available(iOS 13.0, *) {
-            if (try? CoinbaseWalletSDK.shared.handleResponse(url)) == true {
-                return true
-            }
-        } else {
-            // Fallback on earlier versions
-        }
-        // handle other types of deep links
-        return false
-    }
 
-  override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        if #available(iOS 13.0, *) {
-            if let url = userActivity.webpageURL,
-                (try? CoinbaseWalletSDK.shared.handleResponse(url)) == true {
-                return true
-            }
-        } else {
-            // Fallback on earlier versions
-        }
-        // handle other types of deep links
-        return false
+  func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+    GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+  }
+}
+
+class SceneDelegate: FlutterSceneDelegate {
+  override func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    for context in URLContexts {
+      if (try? CoinbaseWalletSDK.shared.handleResponse(context.url)) == true {
+        return
+      }
     }
+  }
+
+  override func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+    if let url = userActivity.webpageURL,
+       (try? CoinbaseWalletSDK.shared.handleResponse(url)) == true {
+      return
+    }
+  }
 }
